@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn({type: 'bigint'})
   id: number;
 
   @Column()
@@ -17,6 +17,6 @@ export class User {
   @Column({ unique: true })
   email: number;
 
-  @Column({ default: new Date() })
+  @Column()
   createdAt: Date;
 }
