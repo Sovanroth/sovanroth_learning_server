@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryColumn({type: 'bigint'})
+  @PrimaryGeneratedColumn({type: 'bigint'})
   id: number;
 
   @Column()
@@ -15,7 +15,7 @@ export class User {
   role: number;
 
   @Column({ unique: true })
-  email: number;
+  email: string;
 
   @Column()
   createdAt: Date;
