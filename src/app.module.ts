@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './typeorm/entities/User';
 // import { User } from './typeorm/entities/User';
 import { UsersModule } from './users/users.module';
+import { CoursesModule } from './courses/courses.module';
+import { Course } from './typeorm/entities/Course';
 
 @Module({
   imports: [
@@ -15,10 +17,11 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: '',
       database: 'sovanroth_learning_server',
-      entities: [User],
+      entities: [User, Course],
       synchronize: true,
     }),
     UsersModule,
+    CoursesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
