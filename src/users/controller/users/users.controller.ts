@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -42,6 +43,7 @@ export class UsersController {
   }
 
   @Post('/auth/login')
+  @HttpCode(200)
   async login(@Body() loginDto: LoginUserDto) {
     try {
       const result = await this.userService.login(loginDto);
