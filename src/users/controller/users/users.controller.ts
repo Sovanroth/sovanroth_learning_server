@@ -42,7 +42,40 @@ export class UsersController {
     }
   }
 
- s
+  @Post('/auth/login')
+  @HttpCode(200)
+  async login(@Body() loginDto: LoginUserDto) {
+    try {
+      const result = await this.userService.login(loginDto);
+
+      if (result) {
+        // Successful login
+        return {
+          error: false,
+          message: 'Login successful',
+          user: {
+            username: result.user.username,
+            email: result.user.email,
+            role: result.user.role,
+            token: result.token,
+          },
+        };
+      } else {
+        // Invalid credentials
+        return {
+          error: true,
+          message: 'Invalid credentials',
+        };
+      }
+    } catch (error) {
+      // Unexpected error during login
+      console.error('Error during login:', error.message);
+      return {
+        error: true,
+        message: 'Error during login',
+      };
+    }
+  }
 
   @Put('/auth/update-user/:id')
   async updateUserById(
