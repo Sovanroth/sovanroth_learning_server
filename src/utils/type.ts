@@ -24,3 +24,13 @@ export type CreateCorseParams = {
   courseResource: string;
   active: number;
 };
+
+export type UpdateCorseParams = {
+  courseTitle: string;
+  courseDescription: string;
+  category: string;
+  courseImage: string;
+  coursePrice: string;
+  courseResource: string;
+  active: number;
+};
