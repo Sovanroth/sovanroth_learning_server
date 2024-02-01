@@ -22,7 +22,7 @@ export class UserService {
       username: user.username,
       email: user.email,
     };
-    const options = { expiresIn: '1h' }; // Set your desired expiration time
+    const options = { expiresIn: '7D' }; // Set your desired expiration time
 
     return jwt.sign(payload, 'your-secret-key', options); // Replace 'your-secret-key' with your actual secret key
   }

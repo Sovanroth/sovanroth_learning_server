@@ -25,4 +25,7 @@ export class Course {
 
   @Column()
   active: number;
+
+  @Column()
+  createdAt: Date;
 }
