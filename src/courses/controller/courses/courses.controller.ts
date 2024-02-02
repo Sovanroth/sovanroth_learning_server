@@ -1,6 +1,18 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CourseService } from 'src/courses/service/course/course.service';
 import { CreateCourseDto } from './dtos/CreateCourse.dto';
+import { identity } from 'rxjs';
+import { UpdateCourseDto } from './dtos/UpdateCourse.dto';
+import { stringify } from 'querystring';
 
 @Controller('courses')
 export class CoursesController {
@@ -38,7 +50,6 @@ export class CoursesController {
         error: false,
         message: 'Get Successfully',
         data: courses,
-        
       };
     } catch (error) {
       return {
@@ -49,8 +60,44 @@ export class CoursesController {
     }
   }
 
-  @Put("/update-course/:id")
-  updateCourse(){
+  @Put('/update-course/:id')
+  async updateCourse(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ) {
+    try {
+      const updateCourse = await this.courseService.updateCourse(
+        id,
+        updateCourseDto,
+      );
+      return {
+        message: 'Course update successfully',
+        error: false,
+        course: updateCourse,
+      };
+    } catch (error) {
+      console.error('Error updating course: ', error.message);
+      return {
+        message: 'Error updating course!',
+        error: true,
+      };
+    }
+  }
 
+  @Delete("/delete-course/:id")
+  async deleteCourseById(@Param('id', ParseIntPipe) id: number){
+    try{
+      await this.courseService.deleteCourse(id)
+      return {
+        message: 'Course deleted successfully',
+        error: false,
+      }
+    } catch(error){
+      console.error('Error deleting course:', error.message);
+      return {
+        message: 'Error deleting course',
+        error: true
+      }
+    }
   }
 }
