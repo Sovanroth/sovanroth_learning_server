@@ -13,6 +13,7 @@ import { CreateCourseDto } from './dtos/CreateCourse.dto';
 import { identity } from 'rxjs';
 import { UpdateCourseDto } from './dtos/UpdateCourse.dto';
 import { stringify } from 'querystring';
+import { CreateVideoDto } from './dtos/CreateVideo.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -45,7 +46,10 @@ export class CoursesController {
   @Get('/get-all-course')
   async getAllCourses() {
     try {
-      const courses = await this.courseService.getCourse();
+      const courses = await this.courseService.getCourse({
+        relations: ['videos'],
+      });
+
       return {
         error: false,
         message: 'Get Successfully',
@@ -84,20 +88,28 @@ export class CoursesController {
     }
   }
 
-  @Delete("/delete-course/:id")
-  async deleteCourseById(@Param('id', ParseIntPipe) id: number){
-    try{
-      await this.courseService.deleteCourse(id)
+  @Delete('/delete-course/:id')
+  async deleteCourseById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.courseService.deleteCourse(id);
       return {
         message: 'Course deleted successfully',
         error: false,
-      }
-    } catch(error){
+      };
+    } catch (error) {
       console.error('Error deleting course:', error.message);
       return {
         message: 'Error deleting course',
-        error: true
-      }
+        error: true,
+      };
     }
+  }
+
+  @Post('/post-video/:id')
+  createVideo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createVideoDto: CreateVideoDto,
+  ) {
+    return this.courseService.createVideo(id, createVideoDto);
   }
 }

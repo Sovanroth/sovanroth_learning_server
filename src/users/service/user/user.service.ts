@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../../typeorm/entities/User';
 import { Repository } from 'typeorm';
@@ -22,9 +22,9 @@ export class UserService {
       username: user.username,
       email: user.email,
     };
-    const options = { expiresIn: '7D' }; // Set your desired expiration time
+    const options = { expiresIn: '7D' };
 
-    return jwt.sign(payload, 'your-secret-key', options); // Replace 'your-secret-key' with your actual secret key
+    return jwt.sign(payload, 'your-secret-key', options);
   }
 
   findUsers() {
@@ -45,7 +45,6 @@ export class UserService {
   ): Promise<{ user: User; token: string } | null> {
     const { email, password } = loginDto;
 
-    // Assuming you have a method like findByEmailAndPassword in your repository
     const user = await this.userRepository.findOne({
       where: { email, password },
     });
@@ -59,10 +58,20 @@ export class UserService {
   }
 
   async updateUser(id: number, updateUserDetail: UpdateUserParams) {
+    // const user = await this.userRepository.findOneBy({ id });
+    // if (!user) {
+    //   throw new HttpException('User cannot be found', HttpStatus.BAD_REQUEST);
+    // }
+
     await this.userRepository.update({ id }, { ...updateUserDetail });
   }
 
-  deleteUser(id: number) {
+  async deleteUser(id: number) {
+    // const user = await this.userRepository.findOneBy({ id });
+    // if (!user) {
+    //   throw new HttpException('User cannot be found', HttpStatus.BAD_REQUEST);
+    // }
+
     return this.userRepository.delete({ id });
   }
 }

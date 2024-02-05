@@ -34,3 +34,8 @@ export type UpdateCorseParams = {
   courseResource: string;
   active: number;
 };
+
+export type CreateVideoParams = {
+  video_title: string;
+  video_url: string;
+};
