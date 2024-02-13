@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -14,6 +16,7 @@ import { identity } from 'rxjs';
 import { UpdateCourseDto } from './dtos/UpdateCourse.dto';
 import { stringify } from 'querystring';
 import { CreateVideoDto } from './dtos/CreateVideo.dto';
+import { STATUS_CODES } from 'http';
 
 @Controller('courses')
 export class CoursesController {
@@ -74,17 +77,26 @@ export class CoursesController {
         id,
         updateCourseDto,
       );
+      console.log('updated');
       return {
         message: 'Course update successfully',
         error: false,
         course: updateCourse,
       };
     } catch (error) {
-      console.error('Error updating course: ', error.message);
-      return {
-        message: 'Error updating course!',
-        error: true,
-      };
+      if (error instanceof NotFoundException) {
+        console.log('notfound');
+        return {
+          message: 'Course not found',
+          error: true,
+        };
+      } else {
+        console.error('Error updating course: ', error.message);
+        return {
+          message: 'Error updating course!',
+          error: true,
+        };
+      }
     }
   }
 
@@ -97,11 +109,19 @@ export class CoursesController {
         error: false,
       };
     } catch (error) {
-      console.error('Error deleting course:', error.message);
-      return {
-        message: 'Error deleting course',
-        error: true,
-      };
+      if (error instanceof NotFoundException) {
+        // console.error('Course not found:', error.message);
+        return {
+          message: 'Course not found',
+          error: true,
+        };
+      } else {
+        // console.error('Error deleting course:', error.message);
+        return {
+          message: 'Error deleting course',
+          error: true,
+        };
+      }
     }
   }
 

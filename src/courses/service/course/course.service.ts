@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Course } from '../../../typeorm/entities/Course';
 import {
   CreateCorseParams,
@@ -29,19 +34,26 @@ export class CourseService {
   }
 
   async updateCourse(id: number, updateCourseDetail: UpdateCorseParams) {
-    await this.courseRepository.update({ id }, { ...updateCourseDetail });
+    const result = this.courseRepository.update(
+      { id },
+      { ...updateCourseDetail },
+    );
+
+    if ((await result).affected === 0) {
+      throw new NotFoundException('Course not found!');
+    }
   }
 
   async deleteCourse(id: number) {
-    return this.courseRepository.delete({ id });
+    const result = await this.courseRepository.delete({ id });
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Course not found');
+    }
+    return result;
   }
 
   async createVideo(id: number, createVideoDetail: CreateVideoParams) {
-    // const course = await this.courseRepository.findOneBy({ id });
-    // if (!course) {
-    //   throw new HttpException('Course cannot be found', HttpStatus.BAD_REQUEST);
-    // }
-
     const newVideo = this.videoRepository.create({ ...createVideoDetail });
     return this.videoRepository.save(newVideo);
   }
