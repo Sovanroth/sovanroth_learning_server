@@ -126,10 +126,30 @@ export class CoursesController {
   }
 
   @Post('/post-video/:id')
-  createVideo(
+  async createVideo(
     @Param('id', ParseIntPipe) id: number,
     @Body() createVideoDto: CreateVideoDto,
   ) {
-    return this.courseService.createVideo(id, createVideoDto);
+    try {
+      await this.courseService.createVideo(id, createVideoDto);
+      return {
+        error: false,
+        message: 'Video created successfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        // Course ID not found
+        return {
+          error: true,
+          message: 'Course not found',
+        };
+      } else {
+        // Other errors
+        return {
+          error: true,
+          message: 'Error creating video',
+        };
+      }
+    }
   }
 }

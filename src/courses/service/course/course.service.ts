@@ -53,8 +53,11 @@ export class CourseService {
     return result;
   }
 
-  async createVideo(id: number, createVideoDetail: CreateVideoParams) {
-    const newVideo = this.videoRepository.create({ ...createVideoDetail });
+  async createVideo(courseId: number, createVideoDetail: CreateVideoParams) {
+    const newVideo = this.videoRepository.create({
+      ...createVideoDetail,
+      course: { id: courseId }, // Associate the video with the course
+    });
     return this.videoRepository.save(newVideo);
   }
 }
