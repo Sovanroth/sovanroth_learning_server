@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Video } from './Video';
 
 @Entity({ name: 'course' })
 export class Course {
@@ -28,4 +29,7 @@ export class Course {
 
   @Column()
   createdAt: Date;
+
+  @OneToMany(() => Video, (video) => video.course)
+  videos: Video[];
 }

@@ -7,6 +7,7 @@ import { User } from './typeorm/entities/User';
 import { UsersModule } from './users/users.module';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from './typeorm/entities/Course';
+import { Video } from './typeorm/entities/Video';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { Course } from './typeorm/entities/Course';
       username: 'root',
       password: '',
       database: 'sovanroth_learning_server',
-      entities: [User, Course],
+      entities: [User, Course, Video],
       synchronize: true,
     }),
     UsersModule,

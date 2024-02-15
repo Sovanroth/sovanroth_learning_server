@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -13,6 +15,8 @@ import { CreateCourseDto } from './dtos/CreateCourse.dto';
 import { identity } from 'rxjs';
 import { UpdateCourseDto } from './dtos/UpdateCourse.dto';
 import { stringify } from 'querystring';
+import { CreateVideoDto } from './dtos/CreateVideo.dto';
+import { STATUS_CODES } from 'http';
 
 @Controller('courses')
 export class CoursesController {
@@ -45,7 +49,10 @@ export class CoursesController {
   @Get('/get-all-course')
   async getAllCourses() {
     try {
-      const courses = await this.courseService.getCourse();
+      const courses = await this.courseService.getCourse({
+        relations: ['videos'],
+      });
+
       return {
         error: false,
         message: 'Get Successfully',
@@ -70,33 +77,78 @@ export class CoursesController {
         id,
         updateCourseDto,
       );
+      console.log('updated');
       return {
         message: 'Course update successfully',
         error: false,
         course: updateCourse,
       };
     } catch (error) {
-      console.error('Error updating course: ', error.message);
-      return {
-        message: 'Error updating course!',
-        error: true,
-      };
+      if (error instanceof NotFoundException) {
+        console.log('notfound');
+        return {
+          message: 'Course not found',
+          error: true,
+        };
+      } else {
+        console.error('Error updating course: ', error.message);
+        return {
+          message: 'Error updating course!',
+          error: true,
+        };
+      }
     }
   }
 
-  @Delete("/delete-course/:id")
-  async deleteCourseById(@Param('id', ParseIntPipe) id: number){
-    try{
-      await this.courseService.deleteCourse(id)
+  @Delete('/delete-course/:id')
+  async deleteCourseById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.courseService.deleteCourse(id);
       return {
         message: 'Course deleted successfully',
         error: false,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        // console.error('Course not found:', error.message);
+        return {
+          message: 'Course not found',
+          error: true,
+        };
+      } else {
+        // console.error('Error deleting course:', error.message);
+        return {
+          message: 'Error deleting course',
+          error: true,
+        };
       }
-    } catch(error){
-      console.error('Error deleting course:', error.message);
+    }
+  }
+
+  @Post('/post-video/:id')
+  async createVideo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createVideoDto: CreateVideoDto,
+  ) {
+    try {
+      await this.courseService.createVideo(id, createVideoDto);
       return {
-        message: 'Error deleting course',
-        error: true
+        error: false,
+        message: 'Video created successfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        // Course ID not found
+        return {
+          error: true,
+          message: 'Course not found',
+        };
+      } else {
+        // Other errors
+        return {
+          error: true,
+          message: 'Error creating video',
+        };
       }
     }
   }
