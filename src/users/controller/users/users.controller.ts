@@ -23,6 +23,11 @@ export class UsersController {
     return this.userService.findUsers();
   }
 
+  @Get('/auth/get-user-by-id/:id')
+  async getUserById(@Param('id') id: number) {
+    return this.userService.findUserById(id);
+  }
+
   @Post('/auth/signup')
   async createUser(@Body() createUserDto: CreateUserDto) {
     try {

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../../typeorm/entities/User';
 import { Repository } from 'typeorm';
@@ -31,6 +36,15 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  async findUserById(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      return { error: true, message: 'User not found', data: {} };
+    }
+    const { password, ...userData } = user;
+    return { error: false, message: 'Get Successfully', data: userData };
+  }
+
   createUser(userDetails: CreateUserParams): Promise<User> {
     const newUser = this.userRepository.create({
       createdAt: new Date(),
@@ -58,20 +72,10 @@ export class UserService {
   }
 
   async updateUser(id: number, updateUserDetail: UpdateUserParams) {
-    // const user = await this.userRepository.findOneBy({ id });
-    // if (!user) {
-    //   throw new HttpException('User cannot be found', HttpStatus.BAD_REQUEST);
-    // }
-
     await this.userRepository.update({ id }, { ...updateUserDetail });
   }
 
   async deleteUser(id: number) {
-    // const user = await this.userRepository.findOneBy({ id });
-    // if (!user) {
-    //   throw new HttpException('User cannot be found', HttpStatus.BAD_REQUEST);
-    // }
-
     return this.userRepository.delete({ id });
   }
 }
