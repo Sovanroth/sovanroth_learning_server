@@ -9,6 +9,7 @@ import {
   CreateCorseParams,
   CreateVideoParams,
   UpdateCorseParams,
+  UpdateVideoParams,
 } from 'src/utils/type';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -59,5 +60,30 @@ export class CourseService {
       course: { id: courseId }, // Associate the video with the course
     });
     return this.videoRepository.save(newVideo);
+  }
+
+  async deleteCourseVideo(id: number) {
+    const result = await this.videoRepository.delete({ id });
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Video not found');
+    }
+    return result;
+  }
+
+  async getVideo(options?: any): Promise<Video[]> {
+    return await this.videoRepository.find(options);
+  }
+
+  async updateVideo(id: number, updateVideoDetail: UpdateVideoParams) {
+    const result = this.videoRepository.update(
+      { id },
+      { ...updateVideoDetail },
+    );
+
+    if ((await result).affected === 0) {
+      throw new NotFoundException('Video not found');
+    }
+    return result;
   }
 }

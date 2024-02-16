@@ -39,3 +39,8 @@ export type CreateVideoParams = {
   video_title: string;
   video_url: string;
 };
+
+export type UpdateVideoParams = {
+  video_title: string;
+  video_url: string;
+};
