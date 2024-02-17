@@ -56,6 +56,11 @@ export class CoursesController {
         relations: ['videos'],
       });
 
+      // Reorder videos within each course data
+      courses.forEach((course) => {
+        course.videos.sort((a, b) => a.id - b.id);
+      });
+
       return {
         error: false,
         message: 'Get Successfully',
@@ -65,6 +70,33 @@ export class CoursesController {
       return {
         error: true,
         message: 'Error fetching courses',
+        data: null,
+      };
+    }
+  }
+
+  @Get('/get-course-by-id/:id')
+  async getCourseById(@Param('id') id: number) {
+    try {
+      const course = await this.courseService.getCourseById(id);
+
+      if (!course) {
+        return {
+          error: true,
+          message: 'Course not found',
+          data: null,
+        };
+      }
+
+      return {
+        error: false,
+        message: 'Get Successfully',
+        data: course,
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error fetching course',
         data: null,
       };
     }
