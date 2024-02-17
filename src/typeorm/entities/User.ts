@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Course } from './Course';
 
 @Entity({ name: 'users' })
 export class User {
@@ -19,4 +20,8 @@ export class User {
 
   @Column()
   createdAt: Date;
+
+  @OneToMany (() => Course, (course) => course.user)
+  courses: Course[];
+
 }

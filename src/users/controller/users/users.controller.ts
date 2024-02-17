@@ -32,6 +32,7 @@ export class UsersController {
           password: user.password,
           role: user.role,
           createdAt: user.createdAt,
+          courses: user.courses,
         })),
       };
     } catch (error) {
@@ -81,6 +82,7 @@ export class UsersController {
           user: {
             username: result.user.username,
             email: result.user.email,
+            password: result.user.password,
             role: result.user.role,
             token: result.token,
           },

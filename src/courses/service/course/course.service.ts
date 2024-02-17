@@ -34,6 +34,23 @@ export class CourseService {
     return await this.courseRepository.find(options);
   }
 
+  // async getCourseById(id: number): Promise<Course | undefined> {
+  //   return await this.courseRepository.findOne({ where: { id } });
+  // }
+
+  async getCourseById(id: number): Promise<Course | undefined> {
+    const course = await this.courseRepository.findOne({ where: { id } });
+
+    if (course) {
+      const videos = await this.videoRepository.find({
+        where: { course: { id: course.id } },
+      });
+      course.videos = videos;
+    }
+
+    return course;
+  }
+
   async updateCourse(id: number, updateCourseDetail: UpdateCorseParams) {
     const result = this.courseRepository.update(
       { id },
@@ -53,6 +70,27 @@ export class CourseService {
     }
     return result;
   }
+
+  //   async deleteCourse(id: number) {
+  //   // Find the course by id
+  //   const course = await this.courseRepository.findOne(id, { relations: ['videos'] });
+
+  //   if (!course) {
+  //     throw new NotFoundException('Course not found');
+  //   }
+
+  //   // Delete associated videos
+  //   await Promise.all(course.videos.map(video => this.videoRepository.delete(video.id)));
+
+  //   // Delete the course itself
+  //   const result = await this.courseRepository.delete(id);
+
+  //   if (result.affected === 0) {
+  //     throw new NotFoundException('Course not found');
+  //   }
+
+  //   return result;
+  // }
 
   async createVideo(courseId: number, createVideoDetail: CreateVideoParams) {
     const newVideo = this.videoRepository.create({
