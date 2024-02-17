@@ -20,7 +20,27 @@ export class UsersController {
 
   @Get('/auth/get-user')
   async getUser() {
-    return this.userService.findUsers();
+    try {
+      const users = await this.userService.findUsers();
+      return {
+        error: false,
+        message: 'get successful',
+        users: users.map((user) => ({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          password: user.password,
+          role: user.role,
+          createdAt: user.createdAt,
+        })),
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error getting users',
+        users: [],
+      };
+    }
   }
 
   @Get('/auth/get-user-by-id/:id')
