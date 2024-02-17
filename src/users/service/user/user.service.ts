@@ -40,7 +40,7 @@ export class UserService {
   async findUserById(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      return { error: true, message: 'User not found', data: {} };
+      return { error: true, message: 'User not found' };
     }
     const { password, ...userData } = user;
     return { error: false, message: 'Get Successfully', data: userData };
@@ -87,5 +87,9 @@ export class UserService {
 
   async deleteUser(id: number) {
     return this.userRepository.delete({ id });
+  }
+
+  async buyCourse(userId: number) {
+    
   }
 }
