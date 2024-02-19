@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,9 @@ import { UsersModule } from './users/users.module';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from './typeorm/entities/Course';
 import { Video } from './typeorm/entities/Video';
+import { LoggerMiddleware } from './users/middlewares/validate-user.middleware';
+import { CoursesController } from './courses/controller/courses/courses.controller';
+import { UsersController } from './users/controller/users/users.controller';
 
 @Module({
   imports: [
@@ -27,4 +30,10 @@ import { Video } from './typeorm/entities/Video';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes(CoursesController, UsersController);
+  }
+}
