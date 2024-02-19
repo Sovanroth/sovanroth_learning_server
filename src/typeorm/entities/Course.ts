@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Video } from './Video';
 import { User } from './User';
 
@@ -10,19 +16,19 @@ export class Course {
   @Column()
   courseTitle: string;
 
-  @Column()
+  @Column({ type: 'text' })
   courseDescription: string;
 
   @Column()
-  category: string;
+  category: number;
 
-  @Column()
+  @Column({ type: 'text' })
   courseImage: string;
 
   @Column()
   coursePrice: string;
 
-  @Column()
+  @Column({ type: 'text' })
   courseResource: string;
 
   @Column()

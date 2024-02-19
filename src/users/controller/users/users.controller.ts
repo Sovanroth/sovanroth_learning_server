@@ -13,6 +13,7 @@ import { CreateUserDto } from '../users/dtos/CreateUser.dto';
 import { UserService } from 'src/users/service/user/user.service';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
+import { User } from 'src/typeorm/entities/User';
 
 @Controller('users')
 export class UsersController {
@@ -59,7 +60,7 @@ export class UsersController {
         user: {
           username: createdUser.username,
           email: createdUser.email,
-          role: createdUser.role,
+          role: createdUser.role
         },
       };
     } catch (error) {

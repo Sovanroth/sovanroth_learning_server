@@ -48,6 +48,7 @@ export class CoursesController {
         },
       };
     } catch (error) {
+      console.log(error);
       return { error: true, message: 'Something went Wrong' };
     }
   }
@@ -85,7 +86,6 @@ export class CoursesController {
     try {
       let options: any = { relations: ['videos'] };
 
-      // If searchInput query parameter is provided, add it to the options
       if (searchInput) {
         const searchCondition: FindOperator<string> = ILike(`%${searchInput}%`);
 
@@ -97,7 +97,6 @@ export class CoursesController {
 
       const courses = await this.courseService.searchCourse(options);
 
-      // Check if any courses are found
       if (courses.length === 0) {
         return {
           error: false,
@@ -120,6 +119,29 @@ export class CoursesController {
         message: 'Error fetching courses',
       };
     }
+  }
+
+  @Get('category')
+  async getCoursesByCategory(
+    @Query('id') categoryId: number,
+  ): Promise<{ error: boolean; message: string; data: Course[] }> {
+    if (!categoryId) {
+      throw new NotFoundException('Category ID is required');
+    }
+
+    const courses = await this.courseService.findByCategory(categoryId);
+
+    if (!courses || courses.length === 0) {
+      throw new NotFoundException(
+        'No courses found for the specified category',
+      );
+    }
+
+    return {
+      error: false,
+      message: 'Get Successfully',
+      data: courses,
+    };
   }
 
   @Get('/get-course-by-id/:id')

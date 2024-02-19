@@ -1,7 +1,7 @@
 export class CreateCourseDto {
     courseTitle: string;
     courseDescription: string;
-    category: string;
+    category: number;
     courseImage: string;
     coursePrice: string;
     courseResource: string;
