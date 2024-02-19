@@ -10,6 +10,7 @@ import { Course } from './typeorm/entities/Course';
 import { Video } from './typeorm/entities/Video';
 import { LoggerMiddleware } from './users/middlewares/validate-user.middleware';
 import { CoursesController } from './courses/controller/courses/courses.controller';
+import { UsersController } from './users/controller/users/users.controller';
 
 @Module({
   imports: [
@@ -33,6 +34,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(CoursesController);
+      .forRoutes(CoursesController, UsersController);
   }
 }
