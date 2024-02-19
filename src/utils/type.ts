@@ -18,7 +18,7 @@ export type UpdateUserParams = {
 export type CreateCorseParams = {
   courseTitle: string;
   courseDescription: string;
-  category: string;
+  category: number;
   courseImage: string;
   coursePrice: string;
   courseResource: string;
@@ -28,7 +28,7 @@ export type CreateCorseParams = {
 export type UpdateCorseParams = {
   courseTitle: string;
   courseDescription: string;
-  category: string;
+  category: number;
   courseImage: string;
   coursePrice: string;
   courseResource: string;
