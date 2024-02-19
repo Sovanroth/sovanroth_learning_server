@@ -34,6 +34,10 @@ export class CourseService {
     return await this.courseRepository.find(options);
   }
 
+  async searchCourse(options?: any): Promise<Course[]> {
+    return await this.courseRepository.find(options);
+  }
+
   // async getCourseById(id: number): Promise<Course | undefined> {
   //   return await this.courseRepository.findOne({ where: { id } });
   // }

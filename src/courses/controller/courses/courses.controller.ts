@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CourseService } from 'src/courses/service/course/course.service';
 import { CreateCourseDto } from './dtos/CreateCourse.dto';
@@ -20,6 +21,7 @@ import { CreateVideoDto } from './dtos/CreateVideo.dto';
 import { STATUS_CODES } from 'http';
 import { resourceUsage } from 'process';
 import { UpdateVideoParams } from 'src/utils/type';
+import { Course } from 'src/typeorm/entities/Course';
 
 @Controller('courses')
 export class CoursesController {
@@ -55,6 +57,46 @@ export class CoursesController {
       const courses = await this.courseService.getCourse({
         relations: ['videos'],
       });
+
+      // Reorder videos within each course data
+      courses.forEach((course) => {
+        course.videos.sort((a, b) => a.id - b.id);
+      });
+
+      return {
+        error: false,
+        message: 'Get Successfully',
+        data: courses,
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error fetching courses',
+        data: null,
+      };
+    }
+  }
+
+  @Get('/search-course')
+  async searchCourses(
+    @Query('title') title: string,
+    @Query('description') description: string,
+  ): Promise<{ error: boolean; message: string; data: Course[] }> {
+    try {
+      let options: any = { relations: ['videos'] };
+
+      // If title or description query parameters are provided, add them to the options
+      if (title || description) {
+        options.where = {};
+        if (title) {
+          options.where.courseTitle = title;
+        }
+        if (description) {
+          options.where.courseDescription = description;
+        }
+      }
+
+      const courses = await this.courseService.searchCourse(options);
 
       // Reorder videos within each course data
       courses.forEach((course) => {
