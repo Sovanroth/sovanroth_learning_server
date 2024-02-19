@@ -22,6 +22,7 @@ import { STATUS_CODES } from 'http';
 import { resourceUsage } from 'process';
 import { UpdateVideoParams } from 'src/utils/type';
 import { Course } from 'src/typeorm/entities/Course';
+import { FindOperator, ILike } from 'typeorm';
 
 @Controller('courses')
 export class CoursesController {
@@ -79,26 +80,31 @@ export class CoursesController {
 
   @Get('/search-course')
   async searchCourses(
-    @Query('title') title: string,
-    @Query('description') description: string,
-  ): Promise<{ error: boolean; message: string; data: Course[] }> {
+    @Query('search-input') searchInput: string,
+  ): Promise<{ error: boolean; message: string; data?: Course[] }> {
     try {
       let options: any = { relations: ['videos'] };
 
-      // If title or description query parameters are provided, add them to the options
-      if (title || description) {
-        options.where = {};
-        if (title) {
-          options.where.courseTitle = title;
-        }
-        if (description) {
-          options.where.courseDescription = description;
-        }
+      // If searchInput query parameter is provided, add it to the options
+      if (searchInput) {
+        const searchCondition: FindOperator<string> = ILike(`%${searchInput}%`);
+
+        options.where = [
+          { courseTitle: searchCondition },
+          { courseDescription: searchCondition },
+        ];
       }
 
       const courses = await this.courseService.searchCourse(options);
 
-      // Reorder videos within each course data
+      // Check if any courses are found
+      if (courses.length === 0) {
+        return {
+          error: false,
+          message: 'No courses found matching the search input!',
+        };
+      }
+
       courses.forEach((course) => {
         course.videos.sort((a, b) => a.id - b.id);
       });
@@ -112,7 +118,6 @@ export class CoursesController {
       return {
         error: true,
         message: 'Error fetching courses',
-        data: null,
       };
     }
   }
