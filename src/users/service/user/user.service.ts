@@ -23,8 +23,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(User) private courseRepository: Repository<Course>,
-    private courseService: CourseService
-
+    private courseService: CourseService,
   ) {}
 
   private generateToken(user: User): string {
@@ -45,7 +44,7 @@ export class UserService {
   async findUserById(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['courses'],
+      relations: ['courses', 'courses.videos'],
     });
 
     if (!user) {
@@ -122,5 +121,4 @@ export class UserService {
 
     return { error: false, message: 'Course bought successfully' };
   }
-
 }
