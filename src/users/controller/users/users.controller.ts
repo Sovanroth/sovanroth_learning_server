@@ -142,4 +142,14 @@ export class UsersController {
       };
     }
   }
+
+
+  @Post('/buy-course/:userId/:courseId')
+  async buyCourse(
+    @Param('userId') userId: number,
+    @Param('courseId') courseId: number,
+  ) {
+    return this.userService.buyCourse(userId, courseId);
+  }
+  
 }

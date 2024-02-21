@@ -15,11 +15,16 @@ import {
 import { LoginUserDto } from 'src/users/controller/users/dtos/LoginUser.dto';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import { Course } from 'src/typeorm/entities/Course';
+import { CourseService } from 'src/courses/service/course/course.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private courseRepository: Repository<Course>,
+    private courseService: CourseService
+
   ) {}
 
   private generateToken(user: User): string {
@@ -94,5 +99,28 @@ export class UserService {
     return this.userRepository.delete({ id });
   }
 
-  async buyCourse(userId: number) {}
+  async buyCourse(userId: number, courseId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['courses'],
+    });
+
+    if (!user) {
+      return { error: true, message: 'User not found' };
+    }
+
+    // Assuming you have logic to fetch the course by courseId
+    // This is just a placeholder
+    const course = await this.courseService.getCourseById(courseId);
+    if (!course) {
+      return { error: true, message: 'Course not found' };
+    }
+
+    user.courses.push(course);
+
+    await this.userRepository.save(user);
+
+    return { error: false, message: 'Course bought successfully' };
+  }
+
 }
