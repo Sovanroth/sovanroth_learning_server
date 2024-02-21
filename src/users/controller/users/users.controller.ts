@@ -151,5 +151,4 @@ export class UsersController {
   ) {
     return this.userService.buyCourse(userId, courseId);
   }
-  
 }
