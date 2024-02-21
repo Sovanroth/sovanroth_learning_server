@@ -34,6 +34,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(CoursesController, UsersController);
+      .forRoutes(CoursesController);
   }
 }
