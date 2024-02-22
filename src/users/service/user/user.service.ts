@@ -98,16 +98,38 @@ export class UserService {
     return this.userRepository.delete({ id });
   }
 
+  // async buyCourse(userId: number, courseId: number) {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //     relations: ['courses'],
+  //   });
+
+  //   if (!user) {
+  //     return { error: true, message: 'User not found' };
+  //   }
+
+  //   const course = await this.courseService.getCourseById(courseId);
+  //   if (!course) {
+  //     return { error: true, message: 'Course not found' };
+  //   }
+
+  //   user.courses.push(course);
+
+  //   await this.userRepository.save(user);
+
+  //   return { error: false, message: 'Course bought successfully' };
+  // }
+
   async buyCourse(userId: number, courseId: number) {
+    // const user = await this.userRepository.findOne(userId, { relations: ['courses'] });
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['courses'],
     });
-
     if (!user) {
       return { error: true, message: 'User not found' };
     }
-    
+
     const course = await this.courseService.getCourseById(courseId);
     if (!course) {
       return { error: true, message: 'Course not found' };

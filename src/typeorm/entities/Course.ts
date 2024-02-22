@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -40,6 +41,6 @@ export class Course {
   @OneToMany(() => Video, (video) => video.course)
   videos: Video[];
 
-  @ManyToOne(() => User, (user) => user.courses)
-  user: User;
+  @ManyToMany(() => User, (user) => user.courses)
+  users: User[];
 }
