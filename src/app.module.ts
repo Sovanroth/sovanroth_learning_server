@@ -11,6 +11,7 @@ import { Video } from './typeorm/entities/Video';
 import { LoggerMiddleware } from './users/middlewares/validate-user.middleware';
 import { CoursesController } from './courses/controller/courses/courses.controller';
 import { UsersController } from './users/controller/users/users.controller';
+import { UserCourse } from './typeorm/entities/UserCourse';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { UsersController } from './users/controller/users/users.controller';
       username: 'root',
       password: '',
       database: 'sovanroth_learning_server',
-      entities: [User, Course, Video],
+      entities: [User, Course, Video, UserCourse],
       synchronize: true,
     }),
     UsersModule,

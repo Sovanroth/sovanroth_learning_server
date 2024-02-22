@@ -81,6 +81,7 @@ export class UsersController {
           error: false,
           message: 'Login successful',
           user: {
+            id: result.user.id,
             username: result.user.username,
             email: result.user.email,
             password: result.user.password,
