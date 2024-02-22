@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/CreateUser.dto';
 import { UserService } from 'src/users/service/user/user.service';
@@ -145,10 +146,18 @@ export class UsersController {
   }
 
 
-  @Post('/buy-course/:userId/:courseId')
+  // @Post('/buy-course/:userId/:courseId')
+  // async buyCourse(
+  //   @Param('userId') userId: number,
+  //   @Param('courseId') courseId: number,
+  // ) {
+  //   return this.userService.buyCourse(userId, courseId);
+  // }
+
+  @Post('/buy-course')
   async buyCourse(
-    @Param('userId') userId: number,
-    @Param('courseId') courseId: number,
+    @Query('userId') userId: number,
+    @Query('courseId') courseId: number,
   ) {
     return this.userService.buyCourse(userId, courseId);
   }
