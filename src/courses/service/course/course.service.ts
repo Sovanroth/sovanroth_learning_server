@@ -75,9 +75,34 @@ export class CourseService {
     }
   }
 
-  async deleteCourse(id: number) {
-    const result = await this.courseRepository.delete({ id });
+  // async deleteCourse(id: number) {
+  //   const result = await this.courseRepository.delete({ id });
 
+  //   if (result.affected === 0) {
+  //     throw new NotFoundException('Course not found');
+  //   }
+  //   return result;
+  // }
+
+  async deleteCourse(id: number) {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['videos'],
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // Delete all videos associated with the course
+    await Promise.all(
+      course.videos.map(async (video) => {
+        await this.courseRepository.manager.remove(video);
+      }),
+    );
+
+    // Delete the course
+    const result = await this.courseRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException('Course not found');
     }
