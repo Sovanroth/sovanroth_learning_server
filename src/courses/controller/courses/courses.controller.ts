@@ -181,7 +181,7 @@ export class CoursesController {
         id,
         updateCourseDto,
       );
-      console.log('updated');
+      // console.log('updated');
       return {
         message: 'Course update successfully',
         error: false,
