@@ -61,12 +61,14 @@ export class UsersController {
         user: {
           username: createdUser.username,
           email: createdUser.email,
-          role: createdUser.role
+          role: createdUser.role,
         },
       };
     } catch (error) {
-      //   console.error('Error creating user:', error.message);
-      return { error: true, message: 'Invalide Cridentials.' };
+      if (error.message === 'Email is already in use') {
+        return { error: true, message: 'Email is already in use' };
+      }
+      return { error: true, message: 'Invalid Credentials' };
     }
   }
 
@@ -144,7 +146,6 @@ export class UsersController {
       };
     }
   }
-
 
   // @Post('/buy-course/:userId/:courseId')
   // async buyCourse(
