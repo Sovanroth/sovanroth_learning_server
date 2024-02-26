@@ -56,12 +56,22 @@ export class UserService {
   }
 
   async createUser(userDetails: CreateUserParams): Promise<User> {
-    const { password, ...rest } = userDetails;
+    const { email, password, ...rest } = userDetails;
+
+    // Check if the email is already used
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new Error('Email is already in use');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
 
     const newUser = this.userRepository.create({
       createdAt: new Date(),
       password: hashedPassword,
+      email,
       ...rest,
     });
 
