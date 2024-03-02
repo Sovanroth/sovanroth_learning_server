@@ -55,6 +55,20 @@ export class CourseService {
     return course;
   }
 
+  async getCourseByActiveStatus(options?: any): Promise<Course[]> {
+    const active = 1;
+    const courses = await this.courseRepository.find({ where: { active } });
+
+    for (const course of courses) {
+      const videos = await this.videoRepository.find({
+        where: { course: { id: course.id } },
+      });
+      course.videos = videos;
+    }
+
+    return courses;
+  }
+
   async findByCategory(categoryId: number): Promise<Course[]> {
     const courses = await this.courseRepository.find({
       where: { category: categoryId },

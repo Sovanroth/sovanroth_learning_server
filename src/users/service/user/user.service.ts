@@ -58,7 +58,6 @@ export class UserService {
   async createUser(userDetails: CreateUserParams): Promise<User> {
     const { email, password, ...rest } = userDetails;
 
-    // Check if the email is already used
     const existingUser = await this.userRepository.findOne({
       where: { email },
     });
@@ -66,7 +65,7 @@ export class UserService {
       throw new Error('Email is already in use');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = this.userRepository.create({
       createdAt: new Date(),
@@ -99,7 +98,7 @@ export class UserService {
       updateUserDetail.password = await bcrypt.hash(
         updateUserDetail.password,
         10,
-      ); // Hash new password
+      );
     }
     await this.userRepository.update({ id }, { ...updateUserDetail });
   }
@@ -108,30 +107,7 @@ export class UserService {
     return this.userRepository.delete({ id });
   }
 
-  // async buyCourse(userId: number, courseId: number) {
-  //   const user = await this.userRepository.findOne({
-  //     where: { id: userId },
-  //     relations: ['courses'],
-  //   });
-
-  //   if (!user) {
-  //     return { error: true, message: 'User not found' };
-  //   }
-
-  //   const course = await this.courseService.getCourseById(courseId);
-  //   if (!course) {
-  //     return { error: true, message: 'Course not found' };
-  //   }
-
-  //   user.courses.push(course);
-
-  //   await this.userRepository.save(user);
-
-  //   return { error: false, message: 'Course bought successfully' };
-  // }
-
   async buyCourse(userId: number, courseId: number) {
-    // const user = await this.userRepository.findOne(userId, { relations: ['courses'] });
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['courses'],

@@ -171,6 +171,33 @@ export class CoursesController {
     }
   }
 
+  @Get('/get-course-by-active')
+  async getCourseByActive() {
+    try {
+      const courses = await this.courseService.getCourseByActiveStatus();
+
+      if (!courses || courses.length === 0) {
+        return {
+          error: true,
+          message: 'Courses not found',
+          data: null,
+        };
+      }
+
+      return {
+        error: false,
+        message: 'Get Successfully',
+        data: courses,
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error fetching courses',
+        data: null,
+      };
+    }
+  }
+
   @Put('/update-course/:id')
   async updateCourse(
     @Param('id', ParseIntPipe) id: number,

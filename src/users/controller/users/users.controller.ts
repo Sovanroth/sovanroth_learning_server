@@ -79,7 +79,6 @@ export class UsersController {
       const result = await this.userService.login(loginDto);
 
       if (result) {
-        // Successful login
         return {
           error: false,
           message: 'Login successful',
@@ -93,14 +92,12 @@ export class UsersController {
           },
         };
       } else {
-        // Invalid credentials
         return {
           error: true,
           message: 'Invalid credentials',
         };
       }
     } catch (error) {
-      // Unexpected error during login
       console.error('Error during login:', error.message);
       return {
         error: true,
@@ -146,14 +143,6 @@ export class UsersController {
       };
     }
   }
-
-  // @Post('/buy-course/:userId/:courseId')
-  // async buyCourse(
-  //   @Param('userId') userId: number,
-  //   @Param('courseId') courseId: number,
-  // ) {
-  //   return this.userService.buyCourse(userId, courseId);
-  // }
 
   @Post('/buy-course')
   async buyCourse(
