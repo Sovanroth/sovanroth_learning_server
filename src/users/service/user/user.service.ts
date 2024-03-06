@@ -9,7 +9,9 @@ import { User } from '../../../typeorm/entities/User';
 import { Repository } from 'typeorm';
 import {
   CreateUserParams,
+  CreateUserProfileParams,
   LoginUserParams,
+  UpdateProfileParams,
   UpdateUserParams,
 } from '../../../utils/type';
 import { LoginUserDto } from 'src/users/controller/users/dtos/LoginUser.dto';
@@ -17,12 +19,14 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { Course } from 'src/typeorm/entities/Course';
 import { CourseService } from 'src/courses/service/course/course.service';
+import { Profile } from 'src/typeorm/entities/Profile';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(User) private courseRepository: Repository<Course>,
+    @InjectRepository(Course) private courseRepository: Repository<Course>,
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     private courseService: CourseService,
   ) {}
 
@@ -44,7 +48,7 @@ export class UserService {
   async findUserById(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['courses', 'courses.videos'],
+      relations: ['courses', 'courses.videos', 'profile'],
     });
 
     if (!user) {
@@ -126,5 +130,36 @@ export class UserService {
     await this.userRepository.save(user);
 
     return { error: false, message: 'Course bought successfully' };
+  }
+
+  async uploadPic(
+    id: number,
+    createUserProfileDetail: CreateUserProfileParams,
+  ) {
+    const newProfile = this.profileRepository.create({
+      ...createUserProfileDetail,
+      user: { id },
+    });
+
+    return this.profileRepository.save(newProfile);
+  }
+
+  async getProfiles(options?: any): Promise<Profile[]> {
+    return await this.profileRepository.find(options);
+  }
+
+  async updateUserProfile(
+    id: number,
+    updateProfileDetail: UpdateProfileParams,
+  ) {
+    const result = this.profileRepository.update(
+      { id },
+      { ...updateProfileDetail },
+    );
+
+    if ((await result).affected === 0) {
+      throw new NotFoundException('Video not found');
+    }
+    return result;
   }
 }

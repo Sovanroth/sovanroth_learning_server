@@ -44,3 +44,11 @@ export type UpdateVideoParams = {
   video_title: string;
   video_url: string;
 };
+
+export type CreateUserProfileParams = {
+  profileImage: string;
+};
+
+export type UpdateProfileParams = {
+  profileImage: string;
+};
