@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -15,6 +16,8 @@ import { UserService } from 'src/users/service/user/user.service';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
 import { User } from 'src/typeorm/entities/User';
+import { UserProfileDto } from './dtos/UserProfile.dto';
+import { UpdateProfileDto } from './dtos/UpdateProfile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -150,5 +153,81 @@ export class UsersController {
     @Query('courseId') courseId: number,
   ) {
     return this.userService.buyCourse(userId, courseId);
+  }
+
+  @Post('/upload-profile/:id')
+  async uploadProfilePicture(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createProfileDto: UserProfileDto,
+  ) {
+    try {
+      await this.userService.uploadPic(id, createProfileDto);
+      return {
+        error: false,
+        message: 'Profile uploaded successfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return {
+          error: true,
+          message: 'User not found',
+        };
+      } else {
+        return {
+          error: true,
+          message: 'Error upload profile',
+        };
+      }
+    }
+  }
+
+  @Get('/get-all-profiles')
+  async getAllProfiles() {
+    try {
+      const profiles = await this.userService.getProfiles();
+
+      return {
+        error: false,
+        message: 'Get Successfully',
+        data: profiles,
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error getting profiles',
+        data: null,
+      };
+    }
+  }
+
+  @Put('/update-user-profile/:id')
+  async updateProfile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    try {
+      const updateProfile = await this.userService.updateUserProfile(
+        id,
+        updateProfileDto,
+      );
+
+      return {
+        message: 'User profile updated successfully',
+        error: false,
+        profile: updateProfile,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return {
+          message: 'Profile not found',
+          error: true,
+        };
+      } else {
+        return {
+          message: 'Error updating Profile',
+          error: true,
+        };
+      }
+    }
   }
 }

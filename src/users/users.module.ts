@@ -6,9 +6,10 @@ import { User } from 'src/typeorm/entities/User';
 import { Course } from 'src/typeorm/entities/Course';
 import { CourseService } from 'src/courses/service/course/course.service';
 import { Video } from 'src/typeorm/entities/Video';
+import { Profile } from 'src/typeorm/entities/Profile';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Course, Video])],
+  imports: [TypeOrmModule.forFeature([User, Course, Video, Profile])],
   controllers: [UsersController],
   providers: [UserService, CourseService]
 })

@@ -10,8 +10,8 @@ import { Course } from './typeorm/entities/Course';
 import { Video } from './typeorm/entities/Video';
 import { LoggerMiddleware } from './users/middlewares/validate-user.middleware';
 import { CoursesController } from './courses/controller/courses/courses.controller';
-import { UsersController } from './users/controller/users/users.controller';
 import { UserCourse } from './typeorm/entities/UserCourse';
+import { Profile } from './typeorm/entities/Profile';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { UserCourse } from './typeorm/entities/UserCourse';
       username: 'root',
       password: '',
       database: 'sovanroth_learning_server',
-      entities: [User, Course, Video, UserCourse],
+      entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
     }),
     UsersModule,
@@ -35,7 +35,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes();
+      .forRoutes(CoursesController);
       // "/users/buy-course"
   }
 }
