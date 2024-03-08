@@ -48,7 +48,7 @@ export class UserService {
   async findUserById(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['courses', 'courses.videos', 'profile'],
+      relations: ['profile', 'courses', 'courses.videos'],
     });
 
     if (!user) {

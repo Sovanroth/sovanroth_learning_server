@@ -32,11 +32,11 @@ export class User {
   @Column()
   createdAt: Date;
 
-  @ManyToMany(() => Course, { cascade: true })
-  @JoinTable()
-  courses: Course[];
-
   @OneToOne(() => Profile, { cascade: true })
   @JoinColumn()
   profile: Profile;
+
+  @ManyToMany(() => Course, { cascade: true })
+  @JoinTable()
+  courses: Course[];
 }
