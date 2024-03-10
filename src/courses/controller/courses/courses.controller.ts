@@ -100,7 +100,7 @@ export class CoursesController {
       if (courses.length === 0) {
         return {
           error: false,
-          message: 'No courses found matching the search input!',
+          message: 'No courses found!',
         };
       }
 
