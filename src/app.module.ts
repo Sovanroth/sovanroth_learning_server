@@ -12,6 +12,7 @@ import { LoggerMiddleware } from './users/middlewares/validate-user.middleware';
 import { CoursesController } from './courses/controller/courses/courses.controller';
 import { UserCourse } from './typeorm/entities/UserCourse';
 import { Profile } from './typeorm/entities/Profile';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Profile } from './typeorm/entities/Profile';
     }),
     UsersModule,
     CoursesModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
