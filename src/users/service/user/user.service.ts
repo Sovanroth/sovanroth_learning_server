@@ -55,7 +55,7 @@ export class UserService {
       return { error: true, message: 'User not found' };
     }
 
-    const { password, ...userData } = user;
+    const { ...userData } = user;
     return { error: false, message: 'Get Successfully', data: userData };
   }
 
