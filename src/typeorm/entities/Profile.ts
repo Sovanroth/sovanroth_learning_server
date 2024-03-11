@@ -13,7 +13,7 @@ export class Profile {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column()
+  @Column({ type: 'text' })
   profileImage: string;
 
   @OneToOne(() => User, (user) => user.profile)
