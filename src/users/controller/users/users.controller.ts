@@ -10,6 +10,8 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/CreateUser.dto';
 import { UserService } from 'src/users/service/user/user.service';
@@ -18,10 +20,15 @@ import { LoginUserDto } from './dtos/LoginUser.dto';
 import { User } from 'src/typeorm/entities/User';
 import { UserProfileDto } from './dtos/UserProfile.dto';
 import { UpdateProfileDto } from './dtos/UpdateProfile.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   @Get('/auth/get-user')
   async getUser() {
@@ -156,12 +163,17 @@ export class UsersController {
   }
 
   @Post('/upload-profile/:id')
+  @UseInterceptors(FileInterceptor('file'))
   async uploadProfilePicture(
     @Param('id', ParseIntPipe) id: number,
-    @Body() createProfileDto: UserProfileDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      await this.userService.uploadPic(id, createProfileDto);
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const imageUrl = uploadResult.secure_url;
+      console.log('data', imageUrl);
+
+      await this.userService.uploadPic(id, { profileImage: imageUrl });
       return {
         error: false,
         message: 'Profile uploaded successfully',
@@ -173,6 +185,7 @@ export class UsersController {
           message: 'User not found',
         };
       } else {
+        console.log(this.cloudinaryService.uploadFile(file));
         return {
           error: true,
           message: 'Error upload profile',

@@ -20,6 +20,7 @@ import * as bcrypt from 'bcrypt';
 import { Course } from 'src/typeorm/entities/Course';
 import { CourseService } from 'src/courses/service/course/course.service';
 import { Profile } from 'src/typeorm/entities/Profile';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,7 @@ export class UserService {
     @InjectRepository(Course) private courseRepository: Repository<Course>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     private courseService: CourseService,
+    private cloudinary: CloudinaryService,
   ) {}
 
   private generateToken(user: User): string {
