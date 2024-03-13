@@ -171,7 +171,7 @@ export class UsersController {
     try {
       const uploadResult = await this.cloudinaryService.uploadFile(file);
       const imageUrl = uploadResult.secure_url;
-      console.log('data', imageUrl);
+      // console.log('data', imageUrl);
 
       await this.userService.uploadPic(id, { profileImage: imageUrl });
       return {
