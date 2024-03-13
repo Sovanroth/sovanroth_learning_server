@@ -164,4 +164,21 @@ export class UserService {
     }
     return result;
   }
+
+  async deleteProfile(id: number) {
+    const profile = await this.profileRepository.findBy({ id });
+    if (!profile) {
+      throw new NotFoundException('Profile not found');
+    }
+
+    await this.userRepository.update({ profile: { id } }, { profile: null });
+
+    const result = await this.profileRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Profile not found');
+    }
+
+    return result;
+  }
 }
