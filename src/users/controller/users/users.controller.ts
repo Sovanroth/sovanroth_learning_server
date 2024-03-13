@@ -214,20 +214,19 @@ export class UsersController {
   }
 
   @Put('/update-user-profile/:id')
+  @UseInterceptors(FileInterceptor('file'))
   async updateProfile(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateProfileDto: UpdateProfileDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const updateProfile = await this.userService.updateUserProfile(
-        id,
-        updateProfileDto,
-      );
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const imageUrl = uploadResult.secure_url;
+      await this.userService.updateUserProfile(id, { profileImage: imageUrl });
 
       return {
         message: 'User profile updated successfully',
         error: false,
-        profile: updateProfile,
       };
     } catch (error) {
       if (error instanceof NotFoundException) {

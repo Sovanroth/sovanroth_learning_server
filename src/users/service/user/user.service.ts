@@ -160,9 +160,8 @@ export class UserService {
     );
 
     if ((await result).affected === 0) {
-      throw new NotFoundException('Video not found');
+      throw new NotFoundException('Profile not found');
     }
-    return result;
   }
 
   async deleteProfile(id: number) {
