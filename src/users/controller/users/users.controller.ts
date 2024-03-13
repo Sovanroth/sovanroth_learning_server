@@ -243,4 +243,21 @@ export class UsersController {
       }
     }
   }
+
+  @Delete('/delete-user-profile/:id')
+  async deleteProfilePicture(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.userService.deleteProfile(id);
+      return {
+        message: 'Profile deleted successfully',
+        error: false,
+      };
+    } catch (error) {
+      console.error('Error deleting profile:', error.message);
+      return {
+        message: error.message || 'Error deleting profile',
+        error: true,
+      };
+    }
+  }
 }
