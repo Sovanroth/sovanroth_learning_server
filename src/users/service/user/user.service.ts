@@ -180,4 +180,30 @@ export class UserService {
 
     return result;
   }
+
+  async getAllCoursesByUser(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['courses'],
+    });
+
+    if (!user) {
+      return { error: true, message: 'User not found' };
+    }
+
+    const courses = await this.courseService.getCourse();
+
+    // Check if each course is owned by the user
+    const ownedCourses = courses.map((course) => {
+      const owned = user.courses.some(
+        (userCourse) => userCourse.id === course.id,
+      );
+      return {
+        ...course,
+        owned: owned ? 1 : 0,
+      };
+    });
+
+    return { error: false, message: 'Get Successfully', data: ownedCourses };
+  }
 }

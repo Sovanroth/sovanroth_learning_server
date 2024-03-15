@@ -259,4 +259,9 @@ export class UsersController {
       };
     }
   }
+
+  @Get('/get-all-course-by-user/:id')
+  async getAllCoursesByUser(@Param('id') userId: number) {
+    return this.userService.getAllCoursesByUser(userId);
+  }
 }
