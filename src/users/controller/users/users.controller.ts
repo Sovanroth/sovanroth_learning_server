@@ -264,4 +264,12 @@ export class UsersController {
   async getAllCoursesByUser(@Param('id') userId: number) {
     return this.userService.getAllCoursesByUser(userId);
   }
+
+  @Get('/get-one-course')
+  async getCourseByUserIdAndCourseId(
+    @Query('userId') userId: number,
+    @Query('courseId') courseId: number,
+  ) {
+    return this.userService.getCourseByUserIdAndCourseId(userId, courseId);
+  }
 }

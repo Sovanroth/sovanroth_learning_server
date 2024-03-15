@@ -207,4 +207,45 @@ export class UserService {
 
     return { error: false, message: 'Get Successfully', data: ownedCourses };
   }
+
+  async getCourseByUserIdAndCourseId(userId: number, courseId: number) {
+    try {
+      const user = await this.findUserById(userId);
+      if (user.error) {
+        return {
+          error: true,
+          message: user.message,
+          data: null,
+        };
+      }
+
+      const course = await this.courseService.getCourseById(courseId);
+      if (!course) {
+        return {
+          error: true,
+          message: 'Course not found',
+          data: null,
+        };
+      }
+
+      const owned = user.data.courses.some(
+        (userCourse) => userCourse.id === course.id,
+      );
+
+      return {
+        error: false,
+        message: 'Get Successfully',
+        data: {
+          ...course,
+          owned: owned ? 1 : 0,
+        },
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: 'Error fetching course',
+        data: null,
+      };
+    }
+  }
 }
