@@ -184,16 +184,17 @@ export class UserService {
   async getAllCoursesByUser(userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['courses'],
+      relations: ['courses', 'courses.videos'],
     });
 
     if (!user) {
       return { error: true, message: 'User not found' };
     }
 
-    const courses = await this.courseService.getCourse();
+    const courses = await this.courseService.getCourseByActiveStatus({
+      where: { active: 1 },
+    });
 
-    // Check if each course is owned by the user
     const ownedCourses = courses.map((course) => {
       const owned = user.courses.some(
         (userCourse) => userCourse.id === course.id,
