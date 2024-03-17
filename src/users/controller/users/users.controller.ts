@@ -272,4 +272,12 @@ export class UsersController {
   ) {
     return this.userService.getCourseByUserIdAndCourseId(userId, courseId);
   }
+
+  @Get('/get-category/')
+  async getCategoryByUser(
+    @Query('categoryId') categoryId: number,
+    @Query('userId') userId: number,
+  ) {
+    return this.userService.getCategoryByUser(userId, categoryId);
+  }
 }
