@@ -208,6 +208,30 @@ export class UserService {
     return { error: false, message: 'Get Successfully', data: ownedCourses };
   }
 
+  async getCategoryByUser(userId: number, categoryId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['courses', 'courses.videos'],
+    });
+
+    if (!user) {
+      return { error: true, message: 'User not found' };
+    }
+
+    const courses = await this.courseService.findByCategory(categoryId);
+
+    const ownedCourses = courses.map((coruse) => {
+      const owned = user.courses.some(
+        (userCourse) => userCourse.id === coruse.id,
+      );
+      return {
+        ...coruse,
+        owned: owned ? 1 : 0,
+      };
+    });
+    return { error: false, message: 'Get Successfully', data: ownedCourses };
+  }
+
   async getCourseByUserIdAndCourseId(userId: number, courseId: number) {
     try {
       const user = await this.findUserById(userId);
