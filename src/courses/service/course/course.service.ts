@@ -35,12 +35,16 @@ export class CourseService {
   }
 
   async searchCourse(options?: any): Promise<Course[]> {
+    if (!options) {
+      options = {};
+    }
+    if (!options.where) {
+      options.where = {};
+    }
+    options.where.active = 1;
+
     return await this.courseRepository.find(options);
   }
-
-  // async getCourseById(id: number): Promise<Course | undefined> {
-  //   return await this.courseRepository.findOne({ where: { id } });
-  // }
 
   async getCourseById(id: number): Promise<Course | undefined> {
     const course = await this.courseRepository.findOne({ where: { id } });

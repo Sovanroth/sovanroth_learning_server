@@ -220,12 +220,19 @@ export class UserService {
 
     const courses = await this.courseService.findByCategory(categoryId);
 
-    const ownedCourses = courses.map((coruse) => {
+    if (!courses || courses.length === 0) {
+      return {
+        error: true,
+        message: 'No courses found for the given category',
+      };
+    }
+
+    const ownedCourses = courses.map((course) => {
       const owned = user.courses.some(
-        (userCourse) => userCourse.id === coruse.id,
+        (userCourse) => userCourse.id === course.id,
       );
       return {
-        ...coruse,
+        ...course,
         owned: owned ? 1 : 0,
       };
     });
