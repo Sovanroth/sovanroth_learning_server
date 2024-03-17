@@ -71,7 +71,7 @@ export class CourseService {
 
   async findByCategory(categoryId: number): Promise<Course[]> {
     const courses = await this.courseRepository.find({
-      where: { category: categoryId },
+      where: { category: categoryId, active: 1 },
       relations: ['videos'],
     });
 
