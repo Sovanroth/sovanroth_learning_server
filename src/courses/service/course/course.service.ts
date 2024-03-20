@@ -63,8 +63,7 @@ export class CourseService {
 
   async searchCourse(options?: any): Promise<Course[]> {
     const active = 1;
-
-    const courses = await this.courseRepository.find({ where: { active } });
+    const courses = await this.courseRepository.find(options);
     return courses;
   }
 
@@ -88,15 +87,6 @@ export class CourseService {
     }
   }
 
-  // async deleteCourse(id: number) {
-  //   const result = await this.courseRepository.delete({ id });
-
-  //   if (result.affected === 0) {
-  //     throw new NotFoundException('Course not found');
-  //   }
-  //   return result;
-  // }
-
   async deleteCourse(id: number) {
     const course = await this.courseRepository.findOne({
       where: { id },
@@ -107,14 +97,12 @@ export class CourseService {
       throw new NotFoundException('Course not found');
     }
 
-    // Delete all videos associated with the course
     await Promise.all(
       course.videos.map(async (video) => {
         await this.courseRepository.manager.remove(video);
       }),
     );
 
-    // Delete the course
     const result = await this.courseRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException('Course not found');
@@ -125,7 +113,7 @@ export class CourseService {
   async createVideo(courseId: number, createVideoDetail: CreateVideoParams) {
     const newVideo = this.videoRepository.create({
       ...createVideoDetail,
-      course: { id: courseId }, // Associate the video with the course
+      course: { id: courseId },
     });
     return this.videoRepository.save(newVideo);
   }
