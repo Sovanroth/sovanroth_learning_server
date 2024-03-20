@@ -84,7 +84,7 @@ export class CoursesController {
     @Query('search-input') searchInput: string,
   ): Promise<{ error: boolean; message: string; data?: Course[] }> {
     try {
-      let options: any = { relations: ['videos'] };
+      let options: any = {};
 
       if (searchInput) {
         const searchCondition: FindOperator<string> = ILike(`%${searchInput}%`);
@@ -94,7 +94,6 @@ export class CoursesController {
           { courseDescription: searchCondition },
         ];
       }
-
       const courses = await this.courseService.searchCourse(options);
 
       if (courses.length === 0) {
@@ -103,10 +102,6 @@ export class CoursesController {
           message: 'No courses found!',
         };
       }
-
-      courses.forEach((course) => {
-        course.videos.sort((a, b) => a.id - b.id);
-      });
 
       return {
         error: false,
@@ -356,5 +351,4 @@ export class CoursesController {
       }
     }
   }
-  
 }
