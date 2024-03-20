@@ -60,7 +60,6 @@ export class CoursesController {
         relations: ['videos'],
       });
 
-      // Reorder videos within each course data
       courses.forEach((course) => {
         course.videos.sort((a, b) => a.id - b.id);
       });
@@ -84,7 +83,8 @@ export class CoursesController {
     @Query('search-input') searchInput: string,
   ): Promise<{ error: boolean; message: string; data?: Course[] }> {
     try {
-      let options: any = { relations: ['videos'] };
+      let options: any = {};
+      const activeValue = 1;
 
       if (searchInput) {
         const searchCondition: FindOperator<string> = ILike(`%${searchInput}%`);
@@ -94,7 +94,6 @@ export class CoursesController {
           { courseDescription: searchCondition },
         ];
       }
-
       const courses = await this.courseService.searchCourse(options);
 
       if (courses.length === 0) {
@@ -103,10 +102,6 @@ export class CoursesController {
           message: 'No courses found!',
         };
       }
-
-      courses.forEach((course) => {
-        course.videos.sort((a, b) => a.id - b.id);
-      });
 
       return {
         error: false,
@@ -208,7 +203,6 @@ export class CoursesController {
         id,
         updateCourseDto,
       );
-      // console.log('updated');
       return {
         message: 'Course update successfully',
         error: false,
@@ -241,13 +235,11 @@ export class CoursesController {
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        // console.error('Course not found:', error.message);
         return {
           message: 'Course not found',
           error: true,
         };
       } else {
-        // console.error('Error deleting course:', error.message);
         return {
           message: 'Error deleting course',
           error: true,
@@ -269,13 +261,11 @@ export class CoursesController {
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        // Course ID not found
         return {
           error: true,
           message: 'Course not found',
         };
       } else {
-        // Other errors
         return {
           error: true,
           message: 'Error creating video',
@@ -356,5 +346,4 @@ export class CoursesController {
       }
     }
   }
-  
 }

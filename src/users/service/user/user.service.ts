@@ -37,7 +37,7 @@ export class UserService {
       userId: user.id,
       username: user.username,
       email: user.email,
-    };
+    }; 
     const options = { expiresIn: '7D' };
 
     return jwt.sign(payload, 'your-secret-key', options);
