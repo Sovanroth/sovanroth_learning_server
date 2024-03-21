@@ -10,6 +10,8 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CourseService } from 'src/courses/service/course/course.service';
 import { CreateCourseDto } from './dtos/CreateCourse.dto';
@@ -23,35 +25,53 @@ import { resourceUsage } from 'process';
 import { UpdateVideoParams } from 'src/utils/type';
 import { Course } from 'src/typeorm/entities/Course';
 import { FindOperator, ILike } from 'typeorm';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('courses')
 export class CoursesController {
-  constructor(private courseService: CourseService) {}
+  constructor(private courseService: CourseService, 
+    private cloudinaryService: CloudinaryService,
+    ) {}
 
-  @Post('/create-course')
-  async createCourse(@Body() createCourseDto: CreateCourseDto) {
-    try {
-      const createdCourse =
-        await this.courseService.createCourse(createCourseDto);
-      return {
-        error: false,
-        message: 'Course Created!',
-        course: {
-          courseTitle: createdCourse.courseTitle,
-          courseDescription: createdCourse.courseDescription,
-          category: createdCourse.category,
-          courseImage: createdCourse.courseImage,
-          coursePrice: createdCourse.coursePrice,
-          courseResource: createdCourse.courseResource,
-          active: createdCourse.active,
-          createdDate: createdCourse.createdAt,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return { error: true, message: 'Something went Wrong' };
-    }
+
+@Post('/create-course')
+@UseInterceptors(FileInterceptor('courseImage')) // Assuming the field name is 'courseImage'
+async createCourse(
+  @UploadedFile() file: Express.Multer.File,
+  @Body() createCourseDto: CreateCourseDto
+) {
+  try {
+    // Upload course image to Cloudinary
+    const uploadResult = await this.cloudinaryService.uploadFile(file);
+    const courseImage = uploadResult.secure_url;
+
+    // Create the course
+    const createdCourse = await this.courseService.createCourse({
+      ...createCourseDto,
+      courseImage, // Assign the Cloudinary URL to courseImage field
+    });
+
+    return {
+      error: false,
+      message: 'Course Created!',
+      course: {
+        courseTitle: createdCourse.courseTitle,
+        courseDescription: createdCourse.courseDescription,
+        category: createdCourse.category,
+        courseImage: createdCourse.courseImage,
+        coursePrice: createdCourse.coursePrice,
+        courseResource: createdCourse.courseResource,
+        active: createdCourse.active,
+        createdDate: createdCourse.createdAt,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: 'Something went Wrong' };
   }
+}
+
 
   @Get('/get-all-course')
   async getAllCourses() {
