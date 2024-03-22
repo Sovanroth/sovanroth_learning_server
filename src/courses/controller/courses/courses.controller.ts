@@ -30,48 +30,45 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('courses')
 export class CoursesController {
-  constructor(private courseService: CourseService, 
+  constructor(
+    private courseService: CourseService,
     private cloudinaryService: CloudinaryService,
-    ) {}
+  ) {}
 
+  @Post('/create-course')
+  @UseInterceptors(FileInterceptor('courseImage'))
+  async createCourse(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createCourseDto: CreateCourseDto,
+  ) {
+    try {
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const courseImage = uploadResult.secure_url;
 
-@Post('/create-course')
-@UseInterceptors(FileInterceptor('courseImage')) // Assuming the field name is 'courseImage'
-async createCourse(
-  @UploadedFile() file: Express.Multer.File,
-  @Body() createCourseDto: CreateCourseDto
-) {
-  try {
-    // Upload course image to Cloudinary
-    const uploadResult = await this.cloudinaryService.uploadFile(file);
-    const courseImage = uploadResult.secure_url;
+      const createdCourse = await this.courseService.createCourse({
+        ...createCourseDto,
+        courseImage,
+      });
 
-    // Create the course
-    const createdCourse = await this.courseService.createCourse({
-      ...createCourseDto,
-      courseImage, // Assign the Cloudinary URL to courseImage field
-    });
-
-    return {
-      error: false,
-      message: 'Course Created!',
-      course: {
-        courseTitle: createdCourse.courseTitle,
-        courseDescription: createdCourse.courseDescription,
-        category: createdCourse.category,
-        courseImage: createdCourse.courseImage,
-        coursePrice: createdCourse.coursePrice,
-        courseResource: createdCourse.courseResource,
-        active: createdCourse.active,
-        createdDate: createdCourse.createdAt,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return { error: true, message: 'Something went Wrong' };
+      return {
+        error: false,
+        message: 'Course Created!',
+        course: {
+          courseTitle: createdCourse.courseTitle,
+          courseDescription: createdCourse.courseDescription,
+          category: createdCourse.category,
+          courseImage: createdCourse.courseImage,
+          coursePrice: createdCourse.coursePrice,
+          courseResource: createdCourse.courseResource,
+          active: createdCourse.active,
+          createdDate: createdCourse.createdAt,
+        },
+      };
+    } catch (error) {
+      // console.log(error);
+      return { error: true, message: 'Something went Wrong' };
+    }
   }
-}
-
 
   @Get('/get-all-course')
   async getAllCourses() {
@@ -214,17 +211,27 @@ async createCourse(
   }
 
   @Put('/update-course/:id')
+  @UseInterceptors(FileInterceptor('courseImage'))
   async updateCourse(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCourseDto: UpdateCourseDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const updateCourse = await this.courseService.updateCourse(
-        id,
-        updateCourseDto,
-      );
+      let courseImage = updateCourseDto.courseImage;
+
+      if (file) {
+        const uploadResult = await this.cloudinaryService.uploadFile(file);
+        courseImage = uploadResult.secure_url;
+      }
+
+      const updateCourse = await this.courseService.updateCourse(id, {
+        ...updateCourseDto,
+        courseImage,
+      });
+
       return {
-        message: 'Course update successfully',
+        message: 'Course updated successfully',
         error: false,
         course: updateCourse,
       };
