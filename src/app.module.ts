@@ -21,7 +21,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
+      password: null,
       database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
