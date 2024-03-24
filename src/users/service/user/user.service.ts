@@ -17,10 +17,10 @@ import {
 import { LoginUserDto } from 'src/users/controller/users/dtos/LoginUser.dto';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import { Course } from 'src/typeorm/entities/Course';
-import { CourseService } from 'src/courses/service/course/course.service';
-import { Profile } from 'src/typeorm/entities/Profile';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Course } from '../../../typeorm/entities/Course';
+import { CourseService } from '../../../courses/service/course/course.service';
+import { Profile } from '../../../typeorm/entities/Profile';
+import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {

@@ -13,7 +13,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { CourseService } from 'src/courses/service/course/course.service';
+import { CourseService } from '../../service/course/course.service';
 import { CreateCourseDto } from './dtos/CreateCourse.dto';
 import { identity, refCount } from 'rxjs';
 import { UpdateCourseDto } from './dtos/UpdateCourse.dto';
@@ -26,7 +26,7 @@ import { UpdateVideoParams } from 'src/utils/type';
 import { Course } from 'src/typeorm/entities/Course';
 import { FindOperator, ILike } from 'typeorm';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 
 @Controller('courses')
 export class CoursesController {

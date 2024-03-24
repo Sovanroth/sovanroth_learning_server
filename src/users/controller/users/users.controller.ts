@@ -14,14 +14,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/CreateUser.dto';
-import { UserService } from 'src/users/service/user/user.service';
+import { UserService } from '../../service/user/user.service';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
 import { User } from 'src/typeorm/entities/User';
 import { UserProfileDto } from './dtos/UserProfile.dto';
 import { UpdateProfileDto } from './dtos/UpdateProfile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 
 @Controller('users')
 export class UsersController {
