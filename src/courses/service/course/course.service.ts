@@ -14,7 +14,7 @@ import {
 } from 'src/utils/type';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Video } from 'src/typeorm/entities/Video';
+import { Video } from '../../../typeorm/entities/Video';
 
 @Injectable()
 export class CourseService {
