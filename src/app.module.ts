@@ -18,10 +18,10 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'mydb.c1gew2iukj14.ap-southeast-1.rds.amazonaws.com',
       port: 3306,
-      username: 'root',
-      password: null,
+      username: 'admin',
+      password: '13102001',
       database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
@@ -41,3 +41,14 @@ export class AppModule implements NestModule {
       // "/users/buy-course"
   }
 }
+
+// TypeOrmModule.forRoot({
+//   type: 'mysql',
+//   host: 'localhost',
+//   port: 3306,
+//   username: 'root',
+//   password: null,
+//   database: 'sovanroth_learning_server',
+//   entities: [User, Course, Video, UserCourse, Profile],
+//   synchronize: true,
+// }),
