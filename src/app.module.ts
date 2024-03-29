@@ -18,11 +18,14 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'mydb.c1gew2iukj14.ap-southeast-1.rds.amazonaws.com',
+      // host: 'mydb.c1gew2iukj14.ap-southeast-1.rds.amazonaws.com',
+      host: 'server.decapsoul.one',
       port: 3306,
-      username: 'admin',
-      password: '13102001',
-      database: 'sovanroth_learning_server',
+      // username: 'admin',
+      // password: '13102001',
+      username: 'root',
+      password: '1234',
+      database: 'lms',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
     }),
