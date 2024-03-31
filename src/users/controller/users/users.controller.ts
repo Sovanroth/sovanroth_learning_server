@@ -22,6 +22,7 @@ import { UserProfileDto } from './dtos/UserProfile.dto';
 import { UpdateProfileDto } from './dtos/UpdateProfile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
+import { ForgotPasswordDto } from 'src/courses/controller/courses/dtos/ForgotPassword.dto';
 
 @Controller('users')
 export class UsersController {
@@ -279,5 +280,22 @@ export class UsersController {
     @Query('userId') userId: number,
   ) {
     return this.userService.getCategoryByUser(userId, categoryId);
+  }
+
+  @Post('/auth/forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    try {
+      const user = await this.userService.forgotPassword(forgotPasswordDto);
+      return {
+        message: 'request successfully',
+        error: false,
+      };
+    } catch (error) {
+      console.error('Error updating user:', error.message);
+      return {
+        message: 'Error updating user',
+        error: true,
+      };
+    }
   }
 }

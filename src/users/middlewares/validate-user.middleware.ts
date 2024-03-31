@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class LoggerMiddleware {
@@ -21,7 +22,24 @@ export class LoggerMiddleware {
   }
 
   private validateToken(token: string): boolean {
-    //can use logic to validate the logic too
-    return true; // For demonstration purposes, always returning true
+    try {
+      const decoded = jwt.verify(token, 'your-secret-key');
+
+      // Check if decoded is a string or JwtPayload
+      if (typeof decoded === 'string') {
+        throw new UnauthorizedException('Invalid authorization token');
+      }
+
+      // Check if token has expired
+      if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+        throw new UnauthorizedException('Token has expired');
+      }
+
+      // You can add more validation logic here if needed
+
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid authorization token');
+    }
   }
 }

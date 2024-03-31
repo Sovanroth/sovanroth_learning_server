@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,14 +23,17 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: 'mydb.c1gew2iukj14.ap-southeast-1.rds.amazonaws.com',
       host: 'server.decapsoul.one',
       port: 3306,
-      // username: 'admin',
-      // password: '13102001',
       username: 'root',
       password: '1234',
       database: 'lms',
+
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: null,
+      // database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
     }),
@@ -40,8 +48,8 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(CoursesController, "/users/auth/get-user-by-id/:id");
-      // "/users/buy-course"
+      .forRoutes(CoursesController, '/users/auth/get-user-by-id/:id');
+    // "/users/buy-course"
   }
 }
 

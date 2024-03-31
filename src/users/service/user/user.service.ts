@@ -21,6 +21,7 @@ import { Course } from '../../../typeorm/entities/Course';
 import { CourseService } from '../../../courses/service/course/course.service';
 import { Profile } from '../../../typeorm/entities/Profile';
 import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
+import { ForgotPasswordDto } from 'src/courses/controller/courses/dtos/ForgotPassword.dto';
 
 @Injectable()
 export class UserService {
@@ -34,11 +35,11 @@ export class UserService {
 
   private generateToken(user: User): string {
     const payload = {
-      userId: user.id,
+      // userId: user.id,
       username: user.username,
       email: user.email,
-    }; 
-    const options = { expiresIn: '7D' };
+    };
+    const options = { expiresIn: '10s' };
 
     return jwt.sign(payload, 'your-secret-key', options);
   }
@@ -91,7 +92,6 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Compare hashed password
       const token = this.generateToken(user);
       return { user, token };
     }
@@ -277,6 +277,30 @@ export class UserService {
         message: 'Error fetching course',
         data: null,
       };
+    }
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      return {
+        message: 'User not found!',
+        error: true,
+      };
+    }
+
+    try {
+      // Logic to send password reset email
+      // For example, you can use a service like SendGrid or nodemailer to send emails
+      // Implement your email sending logic here
+      // Example:
+      // await this.emailService.sendPasswordResetEmail(user.email, resetToken);
+      return true; // Email sent successfully
+    } catch (error) {
+      console.error('Error sending password reset email:', error.message);
+      return false; // Error sending email
     }
   }
 }
