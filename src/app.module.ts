@@ -18,6 +18,7 @@ import { CoursesController } from './courses/controller/courses/courses.controll
 import { UserCourse } from './typeorm/entities/UserCourse';
 import { Profile } from './typeorm/entities/Profile';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UsersController } from './users/controller/users/users.controller';
 
 @Module({
   imports: [
@@ -46,10 +47,14 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes(CoursesController);
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(CoursesController, '/users/auth/get-user-by-id/:id');
-    // "/users/buy-course"
+      .exclude(
+        { path: 'users/auth/signup', method: RequestMethod.ALL },
+        { path: 'users/auth/login', method: RequestMethod.ALL },
+      )
+      .forRoutes(UsersController);
   }
 }
 
