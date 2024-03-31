@@ -17,6 +17,8 @@ import {
 import { LoginUserDto } from 'src/users/controller/users/dtos/LoginUser.dto';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
+import * as nodemailer from 'nodemailer';
 import { Course } from '../../../typeorm/entities/Course';
 import { CourseService } from '../../../courses/service/course/course.service';
 import { Profile } from '../../../typeorm/entities/Profile';
@@ -280,27 +282,67 @@ export class UserService {
     }
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-    const { email } = forgotPasswordDto;
+  async forgotPassword(email: string): Promise<string> {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      return {
-        message: 'User not found!',
-        error: true,
-      };
+      throw new Error('User not found');
     }
 
-    try {
-      // Logic to send password reset email
-      // For example, you can use a service like SendGrid or nodemailer to send emails
-      // Implement your email sending logic here
-      // Example:
-      // await this.emailService.sendPasswordResetEmail(user.email, resetToken);
-      return true; // Email sent successfully
-    } catch (error) {
-      console.error('Error sending password reset email:', error.message);
-      return false; // Error sending email
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetTokenExpiration = new Date();
+    resetTokenExpiration.setHours(resetTokenExpiration.getHours() + 1);
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = resetTokenExpiration;
+
+    await this.userRepository.save(user);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'tanglymeng7@gmail.com',
+        pass: 'tejj sooj rfur oinz',
+      },
+    });
+
+    await transporter.sendMail({
+      from: 'tanglymeng7@gmail.com',
+      to: email,
+      subject: 'Password Reset',
+      text: `To reset your password, please use the following link: http://example.com/reset-password?token=${resetToken}`,
+      html: `
+      <p>Hello,</p>
+      <p>You have requested to reset your password. Click the link below to reset your password:</p>
+      <p><a href="http://example.com/reset-password?token=${resetToken}">Reset Password</a></p>
+      <p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
+      <p>Best regards,</p>
+      <p>Suku Learning Team</p>
+      `,
+    });
+
+    return resetToken;
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({
+      where: { resetToken: token },
+    });
+
+    if (!user || user.resetTokenExpiration < new Date()) {
+      return false;
     }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiration = null;
+
+    await this.userRepository.save(user);
+
+    return true;
   }
 }

@@ -283,19 +283,33 @@ export class UsersController {
   }
 
   @Post('/auth/forgot-password')
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+  async forgotPassword(@Body('email') email: string) {
     try {
-      const user = await this.userService.forgotPassword(forgotPasswordDto);
-      return {
-        message: 'request successfully',
-        error: false,
-      };
+      const result = await this.userService.forgotPassword(email);
+      return { success: true, message: result };
     } catch (error) {
-      console.error('Error updating user:', error.message);
-      return {
-        message: 'Error updating user',
-        error: true,
-      };
+      console.error('Error during forgot password:', error.message);
+      return { success: false, message: 'Error during forgot password' };
+    }
+  }
+
+  @Post('/auth/reset-password')
+  async resetPassword(
+    @Body() resetPasswordDto: { token: string; newPassword: string },
+  ) {
+    try {
+      const result = await this.userService.resetPassword(
+        resetPasswordDto.token,
+        resetPasswordDto.newPassword,
+      );
+      if (result) {
+        return { success: true, message: 'Password reset successfully' };
+      } else {
+        return { success: false, message: 'Invalid or expired reset token' };
+      }
+    } catch (error) {
+      console.error('Error during password reset:', error.message);
+      return { success: false, message: 'Error during password reset' };
     }
   }
 }
