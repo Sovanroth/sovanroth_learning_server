@@ -303,20 +303,20 @@ export class UserService {
       port: 587,
       secure: false,
       auth: {
-        user: 'tanglymeng7@gmail.com',
-        pass: 'tejj sooj rfur oinz',
+        user: 'nsovanroth@gmail.com',
+        pass: 'nhwr cabe hnvz xury',
       },
     });
 
     await transporter.sendMail({
-      from: 'tanglymeng7@gmail.com',
+      from: 'nsovanroth@gmail.com',
       to: email,
       subject: 'Password Reset',
-      text: `To reset your password, please use the following link: http://example.com/reset-password?token=${resetToken}`,
+      text: `To reset your password, please use the following link: http://localhost:3001/forgot-password/reset-password/${resetToken}`,
       html: `
       <p>Hello,</p>
       <p>You have requested to reset your password. Click the link below to reset your password:</p>
-      <p><a href="http://example.com/reset-password?token=${resetToken}">Reset Password</a></p>
+      <p><a href="http://localhost:3001/forgot-password/reset-password/${resetToken}">Reset Password</a></p>
       <p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
       <p>Best regards,</p>
       <p>Suku Learning Team</p>
@@ -338,8 +338,6 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     user.password = hashedPassword;
-    user.resetToken = null;
-    user.resetTokenExpiration = null;
 
     await this.userRepository.save(user);
 

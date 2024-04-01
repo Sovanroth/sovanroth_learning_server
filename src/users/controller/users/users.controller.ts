@@ -286,7 +286,7 @@ export class UsersController {
   async forgotPassword(@Body('email') email: string) {
     try {
       const result = await this.userService.forgotPassword(email);
-      return { success: true, message: result };
+      return { success: true, token: result };
     } catch (error) {
       console.error('Error during forgot password:', error.message);
       return { success: false, message: 'Error during forgot password' };
