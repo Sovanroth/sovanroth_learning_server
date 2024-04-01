@@ -41,7 +41,7 @@ export class UserService {
       username: user.username,
       email: user.email,
     };
-    const options = { expiresIn: '10s' };
+    const options = { expiresIn: '2D' };
 
     return jwt.sign(payload, 'your-secret-key', options);
   }
