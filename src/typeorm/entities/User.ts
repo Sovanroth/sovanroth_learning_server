@@ -32,6 +32,12 @@ export class User {
   @Column()
   createdAt: Date;
 
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true }) 
+  resetTokenExpiration: Date;
+
   @OneToOne(() => Profile, { cascade: true })
   @JoinColumn()
   profile: Profile;
