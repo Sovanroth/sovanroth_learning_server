@@ -286,10 +286,12 @@ export class UsersController {
   async forgotPassword(@Body('email') email: string) {
     try {
       const result = await this.userService.forgotPassword(email);
-      return { success: true, token: result };
+      return { data: { success: true, token: result } };
     } catch (error) {
       console.error('Error during forgot password:', error.message);
-      return { success: false, message: 'Error during forgot password' };
+      return {
+        data: { success: false, message: 'Error during forgot password' },
+      };
     }
   }
 
@@ -303,9 +305,13 @@ export class UsersController {
         resetPasswordDto.newPassword,
       );
       if (result) {
-        return { success: true, message: 'Password reset successfully' };
+        return {
+          data: { success: true, message: 'Password reset successfully' },
+        };
       } else {
-        return { success: false, message: 'Invalid or expired reset token' };
+        return {
+          data: { success: false, message: 'Invalid or expired reset token' },
+        };
       }
     } catch (error) {
       console.error('Error during password reset:', error.message);
