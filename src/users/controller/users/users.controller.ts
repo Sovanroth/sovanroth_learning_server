@@ -290,7 +290,7 @@ export class UsersController {
     } catch (error) {
       console.error('Error during forgot password:', error.message);
       return {
-        data: { data: { success: false, message: 'Email cannot be found.' } },
+        data: { success: false, message: 'Email cannot be found.' },
       };
     }
   }
