@@ -318,6 +318,7 @@ export class UserService {
       <p>You have requested to reset your password. Click the link below to reset your password:</p>
       <p><a href="https://sukulpf.sovanrothnath.site/forgot-password/reset-password/${resetToken}">Reset Password</a></p>
       <p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
+      <p>Note: The link is only available for use in one hour.</p>
       <p>Best regards,</p>
       <p>Suku Learning Team</p>
       `,
