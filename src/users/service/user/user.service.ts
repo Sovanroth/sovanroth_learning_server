@@ -24,6 +24,7 @@ import { CourseService } from '../../../courses/service/course/course.service';
 import { Profile } from '../../../typeorm/entities/Profile';
 import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 import { ForgotPasswordDto } from 'src/courses/controller/courses/dtos/ForgotPassword.dto';
+import { ChangePasswordDto } from 'src/users/controller/users/dtos/ChangePassword.dto';
 
 @Injectable()
 export class UserService {
@@ -343,5 +344,23 @@ export class UserService {
     await this.userRepository.save(user);
 
     return true;
+  }
+
+  async changePassword(
+    id: number,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<boolean> {
+    const { oldPassword, newPassword } = changePasswordDto;
+
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (user && (await bcrypt.compare(oldPassword, user.password))) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      await this.userRepository.save(user);
+      return true;
+    }
+
+    return false;
   }
 }

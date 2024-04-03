@@ -11,7 +11,9 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/CreateUser.dto';
 import { UserService } from '../../service/user/user.service';
@@ -23,6 +25,7 @@ import { UpdateProfileDto } from './dtos/UpdateProfile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 import { ForgotPasswordDto } from 'src/courses/controller/courses/dtos/ForgotPassword.dto';
+import { ChangePasswordDto } from './dtos/ChangePassword.dto';
 
 @Controller('users')
 export class UsersController {
@@ -84,7 +87,6 @@ export class UsersController {
   }
 
   @Post('/auth/login')
-  @HttpCode(200)
   async login(@Body() loginDto: LoginUserDto) {
     try {
       const result = await this.userService.login(loginDto);
@@ -316,6 +318,36 @@ export class UsersController {
     } catch (error) {
       console.error('Error during password reset:', error.message);
       return { success: false, message: 'Error during password reset' };
+    }
+  }
+
+  @Post('/change-password/:id')
+  async changePassword(
+    @Param('id') id: number,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    try {
+      const result = await this.userService.changePassword(
+        id,
+        changePasswordDto,
+      );
+      if (result) {
+        return {
+          error: false,
+          message: 'Password changed successfully',
+        };
+      } else {
+        return {
+          error: true,
+          message: 'Invalid old password',
+        };
+      }
+    } catch (error) {
+      console.error('Error during password change:', error.message);
+      return {
+        error: true,
+        message: 'Error during password change',
+      };
     }
   }
 }
