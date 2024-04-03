@@ -333,20 +333,26 @@ export class UsersController {
       );
       if (result) {
         return {
-          error: false,
-          message: 'Password changed successfully',
+          data: {
+            error: false,
+            message: 'Password changed successfully',
+          },
         };
       } else {
         return {
-          error: true,
-          message: 'Invalid old password',
+          data: {
+            error: true,
+            message: 'Invalid old password',
+          },
         };
       }
     } catch (error) {
       console.error('Error during password change:', error.message);
       return {
-        error: true,
-        message: 'Error during password change',
+        data: {
+          error: true,
+          message: 'Error during password change',
+        },
       };
     }
   }
