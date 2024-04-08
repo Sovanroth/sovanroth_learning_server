@@ -50,18 +50,14 @@ export class CoursesController {
         courseImage,
       });
 
+      const { id, ...courseDetails } = createdCourse;
+
       return {
         error: false,
         message: 'Course Created!',
         course: {
-          courseTitle: createdCourse.courseTitle,
-          courseDescription: createdCourse.courseDescription,
-          category: createdCourse.category,
-          courseImage: createdCourse.courseImage,
-          coursePrice: createdCourse.coursePrice,
-          courseResource: createdCourse.courseResource,
-          active: createdCourse.active,
-          createdDate: createdCourse.createdAt,
+          id,
+          ...courseDetails,
         },
       };
     } catch (error) {
