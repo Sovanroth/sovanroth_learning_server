@@ -26,12 +26,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../../cloudinary/cloudinary.service';
 import { ForgotPasswordDto } from 'src/courses/controller/courses/dtos/ForgotPassword.dto';
 import { ChangePasswordDto } from './dtos/ChangePassword.dto';
+import { PaypalService } from 'src/users/service/user/paypal.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private userService: UserService,
     private cloudinaryService: CloudinaryService,
+    private readonly paypalService: PaypalService
   ) {}
 
   @Get('/auth/get-user')
@@ -355,5 +357,10 @@ export class UsersController {
         },
       };
     }
+  }
+
+  @Post('/paypal/create-order')
+  async createOrder(@Body() body: { amount: number }): Promise<any> {
+    return this.paypalService.createOrder(body.amount);
   }
 }
