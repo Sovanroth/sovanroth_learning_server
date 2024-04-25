@@ -45,6 +45,4 @@ export class PaypalService {
       });
     });
   }
-
-  // Implement other PayPal API calls as needed
 }
