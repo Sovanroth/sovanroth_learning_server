@@ -31,9 +31,9 @@ import { UsersController } from './users/controller/users/users.controller';
       database: 'lms',
 
       // host: 'localhost',
-      // port: 3306,
+      // port: 8889,
       // username: 'root',
-      // password: null,
+      // password: 'root',
       // database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
