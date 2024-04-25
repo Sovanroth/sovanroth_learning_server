@@ -22,8 +22,8 @@ export class PaypalService {
         payment_method: 'paypal',
       },
       redirect_urls: {
-        return_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/cancel',
+        return_url: 'https://sukulpf.sovanrothnath.site/',
+        cancel_url: 'https://sukulpf.sovanrothnath.site/',
       },
       transactions: [
         {
@@ -44,5 +44,8 @@ export class PaypalService {
         }
       });
     });
+  }
+  catch(error) {
+    throw new Error(`Failed to create PayPal order: ${error.message}`);
   }
 }
