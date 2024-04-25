@@ -24,17 +24,17 @@ import { UsersController } from './users/controller/users/users.controller';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'server.decapsoul.one',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'lms',
-
-      // host: 'localhost',
+      // host: 'server.decapsoul.one',
       // port: 3306,
       // username: 'root',
-      // password: null,
-      // database: 'sovanroth_learning_server',
+      // password: '1234',
+      // database: 'lms',
+
+      host: 'localhost',
+      port: 8889,
+      username: 'root',
+      password: 'root',
+      database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile],
       synchronize: true,
     }),

@@ -28,7 +28,7 @@ export class PaypalService {
       transactions: [
         {
           amount: {
-            total: amount.toFixed(2),
+            total: amount,
             currency: 'USD',
           },
         },
