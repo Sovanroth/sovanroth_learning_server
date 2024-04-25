@@ -8,10 +8,11 @@ import { CourseService } from 'src/courses/service/course/course.service';
 import { Video } from 'src/typeorm/entities/Video';
 import { Profile } from 'src/typeorm/entities/Profile';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { PaypalService } from './service/user/paypal.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Course, Video, Profile])],
   controllers: [UsersController],
-  providers: [UserService, CourseService, CloudinaryService]
+  providers: [UserService, CourseService, CloudinaryService, PaypalService]
 })
 export class UsersModule {}
