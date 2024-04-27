@@ -12,6 +12,12 @@ export class Video {
   @Column()
   video_url: string;
 
+  @Column()
+  video_description: string;
+
+  @Column()
+  video_resource: string;
+
   @ManyToOne(() => Course, (course) => course.videos)
   course: Course;
 }
