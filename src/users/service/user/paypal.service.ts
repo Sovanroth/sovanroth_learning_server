@@ -48,7 +48,7 @@ export class PaypalService {
           },
         ],
         application_context: {
-          return_url: 'http://localhost:3001/',
+          return_url: 'http://localhost:3001/paid-success',
         },
       };
       const response = await fetch(url, {
