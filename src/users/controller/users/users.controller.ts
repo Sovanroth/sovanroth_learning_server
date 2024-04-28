@@ -360,8 +360,14 @@ export class UsersController {
   }
 
   @Post('/paypal/create-order')
-  async createOrder(@Body() body: { amount: number }): Promise<any> {
-    return this.paypalService.createOrder(body.amount);
+  async createOrder(
+    @Body() body: { amount: number; courseId: number; userId: number },
+  ): Promise<any> {
+    return this.paypalService.createOrder(
+      body.amount,
+      body.courseId,
+      body.userId,
+    );
   }
 
   @Post('/paypal/execute-payment')

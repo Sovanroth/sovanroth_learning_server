@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import fetch from 'node-fetch';
+import { UserService } from './user.service';
 
 @Injectable()
 export class PaypalService {
+  constructor(private userService: UserService) {}
+
   async generateAccessToken(): Promise<string> {
     try {
       const PAYPAL_CLIENT_ID =
@@ -33,7 +36,11 @@ export class PaypalService {
     }
   }
 
-  async createOrder(amount: number): Promise<any> {
+  async createOrder(
+    amount: number,
+    courseId: number,
+    userId: number,
+  ): Promise<any> {
     try {
       const accessToken = await this.generateAccessToken();
       const url = 'https://api-m.sandbox.paypal.com/v2/checkout/orders';
@@ -48,7 +55,7 @@ export class PaypalService {
           },
         ],
         application_context: {
-          return_url: 'http://localhost:3001/paid-success',
+          return_url: `https://sukulpf.sovanrothnath.site/paid-success?CourseID=${courseId}&UserId=${userId}`,
         },
       };
       const response = await fetch(url, {
