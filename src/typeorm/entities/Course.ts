@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Video } from './Video';
 import { User } from './User';
+import { Comment } from './Comment';
 
 @Entity({ name: 'course' })
 export class Course {
@@ -43,4 +44,7 @@ export class Course {
 
   @ManyToMany(() => User, (user) => user.courses)
   users: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.course)
+  comments: Comment[];
 }
