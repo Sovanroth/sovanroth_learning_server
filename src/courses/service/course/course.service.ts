@@ -49,6 +49,7 @@ export class CourseService {
       const comments = await this.commentRepository.find({
         where: { course: { id: course.id } },
         relations: ['user', 'user.profile'],
+        order: { createdAt: 'DESC' },
       });
 
       course.videos = videos;
