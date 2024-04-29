@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Course } from './Course';
 import { Profile } from './Profile';
+import { Comment } from './Comment';
 
 @Entity({ name: 'users' })
 export class User {
@@ -35,7 +36,7 @@ export class User {
   @Column({ nullable: true })
   resetToken: string;
 
-  @Column({ nullable: true }) 
+  @Column({ nullable: true })
   resetTokenExpiration: Date;
 
   @OneToOne(() => Profile, { cascade: true })
@@ -45,4 +46,7 @@ export class User {
   @ManyToMany(() => Course, { cascade: true })
   @JoinTable()
   courses: Course[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

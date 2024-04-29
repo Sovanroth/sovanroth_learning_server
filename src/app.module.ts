@@ -19,6 +19,10 @@ import { UserCourse } from './typeorm/entities/UserCourse';
 import { Profile } from './typeorm/entities/Profile';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UsersController } from './users/controller/users/users.controller';
+import { CommentsService } from './comments/service/comments/comments.service';
+import { CommentsController } from './comments/controller/comments/comments.controller';
+import { CommentsModule } from './comments/comments.module';
+import { Comment } from './typeorm/entities/Comment';
 
 @Module({
   imports: [
@@ -35,12 +39,13 @@ import { UsersController } from './users/controller/users/users.controller';
       // username: 'root',
       // password: 'root',
       // database: 'sovanroth_learning_server',
-      entities: [User, Course, Video, UserCourse, Profile],
+      entities: [User, Course, Video, UserCourse, Profile, Comment],
       synchronize: true,
     }),
     UsersModule,
     CoursesModule,
     CloudinaryModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

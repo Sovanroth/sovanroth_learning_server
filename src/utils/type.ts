@@ -52,3 +52,11 @@ export type CreateUserProfileParams = {
 export type UpdateProfileParams = {
   profileImage: string;
 };
+
+export type CreateCommentParams = {
+  commentData: string;
+};
+
+export type UpdateCommmentParams = {
+  commentData: string;
+};

@@ -5,10 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Course } from 'src/typeorm/entities/Course';
 import { Video } from 'src/typeorm/entities/Video';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Comment } from 'src/typeorm/entities/Comment';
+import { CommentsService } from 'src/comments/service/comments/comments.service';
+import { UserService } from 'src/users/service/user/user.service';
+import { User } from 'src/typeorm/entities/User';
+import { Profile } from 'src/typeorm/entities/Profile';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, Video])],
-  providers: [CourseService, CloudinaryService],
+  imports: [TypeOrmModule.forFeature([Course, Video, Comment, User, Profile])],
+  providers: [CourseService, CloudinaryService, CommentsService, UserService],
   controllers: [CoursesController]
 })
 export class CoursesModule {}

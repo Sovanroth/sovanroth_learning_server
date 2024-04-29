@@ -9,9 +9,10 @@ import { Video } from 'src/typeorm/entities/Video';
 import { Profile } from 'src/typeorm/entities/Profile';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PaypalService } from './service/user/paypal.service';
+import { Comment } from 'src/typeorm/entities/Comment';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Course, Video, Profile])],
+  imports: [TypeOrmModule.forFeature([User, Course, Video, Profile, Comment])],
   controllers: [UsersController],
   providers: [UserService, CourseService, CloudinaryService, PaypalService]
 })

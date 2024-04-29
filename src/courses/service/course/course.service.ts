@@ -15,12 +15,16 @@ import {
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from '../../../typeorm/entities/Video';
+import { Comment } from 'src/typeorm/entities/Comment';
+import { User } from 'src/typeorm/entities/User';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectRepository(Course) private courseRepository: Repository<Course>,
     @InjectRepository(Video) private videoRepository: Repository<Video>,
+    @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   createCourse(courseDetail: CreateCorseParams): Promise<Course> {
@@ -42,7 +46,13 @@ export class CourseService {
       const videos = await this.videoRepository.find({
         where: { course: { id: course.id } },
       });
+      const comments = await this.commentRepository.find({
+        where: { course: { id: course.id } },
+        relations: ['user', 'user.profile'],
+      });
+
       course.videos = videos;
+      course.comments = comments;
     }
 
     return course;
