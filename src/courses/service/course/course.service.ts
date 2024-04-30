@@ -49,6 +49,7 @@ export class CourseService {
       const comments = await this.commentRepository.find({
         where: { course: { id: course.id } },
         relations: ['user', 'user.profile'],
+        order: { createdAt: 'DESC' },
       });
 
       course.videos = videos;
@@ -101,7 +102,7 @@ export class CourseService {
   async deleteCourse(id: number) {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations: ['videos'],
+      relations: ['videos', 'comments'],
     });
 
     if (!course) {
@@ -113,6 +114,7 @@ export class CourseService {
         await this.courseRepository.manager.remove(video);
       }),
     );
+    await this.commentRepository.remove(course.comments);
 
     const result = await this.courseRepository.delete(id);
     if (result.affected === 0) {
