@@ -100,7 +100,7 @@ export class CommentsController {
         };
       } else {
         return {
-          message: 'Error updating comment!',
+          message: 'Error Deleting comment!',
           error: true,
         };
       }

@@ -37,14 +37,14 @@ export class CommentsService {
     );
 
     if ((await result).affected === 0) {
-      throw new NotFoundException('Course not found!');
+      throw new NotFoundException('Comment not found!');
     }
   }
 
   async deleteComment(id: number) {
     const result = await this.commentRepository.delete({ id });
     if (result.affected === 0) {
-      throw new NotFoundException('COmment not found');
+      throw new NotFoundException('Comment not found');
     }
 
     return result;
