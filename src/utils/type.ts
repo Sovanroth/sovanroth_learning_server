@@ -60,3 +60,7 @@ export type CreateCommentParams = {
 export type UpdateCommmentParams = {
   commentData: string;
 };
+
+export type CreateReplyParams = {
+  replyData: string;
+};
