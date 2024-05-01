@@ -12,6 +12,7 @@ import {
 import { Course } from './Course';
 import { Profile } from './Profile';
 import { Comment } from './Comment';
+import { Reply } from './Reply';
 
 @Entity({ name: 'users' })
 export class User {
@@ -49,4 +50,7 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => Reply, (reply) => reply.user)
+  replies: Reply;
 }

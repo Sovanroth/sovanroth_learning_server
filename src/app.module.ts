@@ -23,6 +23,8 @@ import { CommentsService } from './comments/service/comments/comments.service';
 import { CommentsController } from './comments/controller/comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './typeorm/entities/Comment';
+import { Reply } from './typeorm/entities/Reply';
+import { RepliesModule } from './replies/replies.module';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { Comment } from './typeorm/entities/Comment';
       type: 'mysql',
       host: 'server.decapsoul.one',
       port: 3306,
-      username: 'root',
+      username: 'server',
       password: '1234',
       database: 'lms',
 
@@ -39,13 +41,14 @@ import { Comment } from './typeorm/entities/Comment';
       // username: 'root',
       // password: 'root',
       // database: 'sovanroth_learning_server',
-      entities: [User, Course, Video, UserCourse, Profile, Comment],
+      entities: [User, Course, Video, UserCourse, Profile, Comment, Reply],
       synchronize: true,
     }),
     UsersModule,
     CoursesModule,
     CloudinaryModule,
     CommentsModule,
+    RepliesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
