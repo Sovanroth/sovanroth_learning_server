@@ -26,6 +26,6 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
 
-  @OneToMany(() => Reply, (reply) => reply.comment)
+  @OneToMany(() => Reply, (reply) => reply.comment, { cascade: true })
   replies: Reply;
 }

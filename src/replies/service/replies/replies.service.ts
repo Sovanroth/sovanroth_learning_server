@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reply } from 'src/typeorm/entities/Reply';
-import { CreateReplyParams } from 'src/utils/type';
+import { CreateReplyParams, UpadteReplyParams } from 'src/utils/type';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -23,5 +23,30 @@ export class RepliesService {
     });
 
     return this.replyRepository.save(newReply);
+  }
+
+  async updateReply(id: number, updateReplyDetail: UpadteReplyParams) {
+    const result = this.replyRepository.update(
+      { id },
+      { ...updateReplyDetail },
+    );
+
+    if ((await result).affected === 0) {
+      throw new NotFoundException('reply not found');
+    }
+    return result;
+  }
+
+  async getAllReplies(): Promise<Reply[]> {
+    return this.replyRepository.find({ relations: ['user'] });
+  }
+
+  async deleteReply(id: number) {
+    const result = await this.replyRepository.delete({ id });
+    if (result.affected === 0) {
+      throw new NotFoundException('Reply not found');
+    }
+
+    return result;
   }
 }

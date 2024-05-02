@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCourseDto } from 'src/courses/controller/courses/dtos/UpdateCourse.dto';
 import { Comment } from 'src/typeorm/entities/Comment';
+import { Reply } from 'src/typeorm/entities/Reply';
 import { CreateCommentParams, UpdateCommmentParams } from 'src/utils/type';
 import { Repository } from 'typeorm';
 
@@ -9,6 +10,7 @@ import { Repository } from 'typeorm';
 export class CommentsService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(Reply) private replyRepository: Repository<Reply>,
   ) {}
 
   async createComment(
@@ -27,7 +29,7 @@ export class CommentsService {
   }
 
   async getAllComments(): Promise<Comment[]> {
-    return this.commentRepository.find({ relations: ['user'] });
+    return this.commentRepository.find({ relations: ['user', 'replies'] });
   }
 
   async updateComment(id: number, updateCommentDetail: UpdateCommmentParams) {
@@ -37,14 +39,24 @@ export class CommentsService {
     );
 
     if ((await result).affected === 0) {
-      throw new NotFoundException('Course not found!');
+      throw new NotFoundException('Comment not found!');
     }
   }
 
   async deleteComment(id: number) {
-    const result = await this.commentRepository.delete({ id });
+    const comment = await this.commentRepository.findOne({
+      where: { id },
+      relations: ['replies'],
+    });
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+
+    await this.replyRepository.delete({ comment });
+
+    const result = await this.commentRepository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundException('COmment not found');
+      throw new NotFoundException('Comment not found');
     }
 
     return result;

@@ -64,3 +64,7 @@ export type UpdateCommmentParams = {
 export type CreateReplyParams = {
   replyData: string;
 };
+
+export type UpadteReplyParams = {
+  replyData: string;
+};

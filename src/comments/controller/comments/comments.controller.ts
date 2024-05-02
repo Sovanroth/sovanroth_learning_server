@@ -93,6 +93,7 @@ export class CommentsController {
         error: false,
       };
     } catch (error) {
+      console.log(error);
       if (error instanceof NotFoundException) {
         return {
           message: 'Comment not found!',
@@ -100,7 +101,7 @@ export class CommentsController {
         };
       } else {
         return {
-          message: 'Error updating comment!',
+          message: 'Error Deleting comment!',
           error: true,
         };
       }
