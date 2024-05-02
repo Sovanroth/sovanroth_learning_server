@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCourseDto } from 'src/courses/controller/courses/dtos/UpdateCourse.dto';
 import { Comment } from 'src/typeorm/entities/Comment';
+import { Course } from 'src/typeorm/entities/Course';
 import { Reply } from 'src/typeorm/entities/Reply';
 import { CreateCommentParams, UpdateCommmentParams } from 'src/utils/type';
 import { Repository } from 'typeorm';
@@ -11,6 +12,7 @@ export class CommentsService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     @InjectRepository(Reply) private replyRepository: Repository<Reply>,
+    @InjectRepository(Course) private courseRepository: Repository<Course>,
   ) {}
 
   async createComment(
@@ -60,5 +62,25 @@ export class CommentsService {
     }
 
     return result;
+  }
+
+  async getCommentsByCourseId(courseId: number): Promise<Comment[]> {
+    const course = await this.courseRepository.findOne({
+      where: { id: courseId },
+      relations: [
+        'comments',
+        'comments.user',
+        'comments.user.profile',
+        'comments.replies',
+        'comments.replies.user',
+        'comments.replies.user.profile',
+      ],
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    return course.comments;
   }
 }

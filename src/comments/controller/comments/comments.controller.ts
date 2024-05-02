@@ -12,6 +12,7 @@ import {
 import { CommentsService } from 'src/comments/service/comments/comments.service';
 import { CreateComment } from './dtos/CreateComment.dto';
 import { UpdateCommmentDto } from './dtos/UpdateComment.dto';
+import { Comment } from 'src/typeorm/entities/Comment';
 
 @Controller('comments')
 export class CommentsController {
@@ -105,6 +106,33 @@ export class CommentsController {
           error: true,
         };
       }
+    }
+  }
+
+  @Get('/get-comment-by-course-id/:courseId')
+  async getCommentsByCourseId(
+    @Param('courseId', ParseIntPipe) courseId: number,
+  ) {
+    try {
+      const comments =
+        await this.commentService.getCommentsByCourseId(courseId);
+      return {
+        error: false,
+        message: 'Get successfully!',
+        data: comments,
+      };
+    } catch (error) {
+      console.log(error);
+      if (error instanceof NotFoundException) {
+        return {
+          error: true,
+          message: 'Course Not Found!',
+        };
+      }
+      return {
+        error: true,
+        message: 'Internal Server Error!',
+      };
     }
   }
 }

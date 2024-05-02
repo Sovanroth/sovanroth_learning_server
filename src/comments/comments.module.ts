@@ -5,9 +5,11 @@ import { CommentsService } from './service/comments/comments.service';
 import { CommentsController } from './controller/comments/comments.controller';
 import { Reply } from 'src/typeorm/entities/Reply';
 import { RepliesService } from 'src/replies/service/replies/replies.service';
+import { Course } from 'src/typeorm/entities/Course';
+import { User } from 'src/typeorm/entities/User';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, Reply])],
+  imports: [TypeOrmModule.forFeature([Comment, Reply, Course, User])],
   providers: [CommentsService, RepliesService],
   controllers: [CommentsController],
 })
