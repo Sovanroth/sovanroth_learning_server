@@ -30,17 +30,17 @@ import { RepliesModule } from './replies/replies.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: 'server.decapsoul.one',
-      // port: 3306,
-      // username: 'server',
-      // password: '1234',
-      // database: 'lms',
-
-      host: 'localhost',
-      port: 8889,
+      host: '54.179.125.3',
+      port: 3306,
       username: 'root',
-      password: 'root',
-      database: 'sovanroth_learning_server',
+      password: 'myDb@20240$',
+      database: 'lms',
+
+      // host: 'localhost',
+      // port: 8889,
+      // username: 'root',
+      // password: 'root',
+      // database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile, Comment, Reply],
       synchronize: true,
     }),
