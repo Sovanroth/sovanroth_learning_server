@@ -30,10 +30,10 @@ import { RepliesModule } from './replies/replies.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'server.decapsoul.one',
+      host: '54.179.125.3',
       port: 3306,
-      username: 'server',
-      password: '1234',
+      username: 'root',
+      password: 'myDb@20240$',
       database: 'lms',
 
       // host: 'localhost',
