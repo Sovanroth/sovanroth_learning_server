@@ -30,7 +30,7 @@ import { RepliesModule } from './replies/replies.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '54.179.125.3',
+      host: '54.179.61.30',
       port: 3306,
       username: 'root',
       password: 'myDb@20240$',
@@ -40,8 +40,8 @@ import { RepliesModule } from './replies/replies.module';
       // port: 8889,
       // username: 'root',
       // password: 'root',
-      // database: 'sovanroth_learning_server',
       entities: [User, Course, Video, UserCourse, Profile, Comment, Reply],
+      // database: 'sovanroth_learning_server',
       synchronize: true,
     }),
     UsersModule,
